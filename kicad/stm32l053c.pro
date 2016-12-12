@@ -1,4 +1,4 @@
-update=15/10/2016 10:09:40
+update=Monday, 12 December 2016 'pmt' 13:52:28
 version=1
 last_client=kicad
 [pcbnew]
@@ -59,3 +59,4 @@ LibName27=atmel
 LibName28=contrib
 LibName29=valves
 LibName30=stm32
+LibName31=lcd_kitchen_timer
