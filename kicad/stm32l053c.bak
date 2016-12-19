@@ -931,17 +931,6 @@ F 3 "" H 9300 5150 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L TEST_1P W1
-U 1 1 58557FAC
-P 3400 6400
-F 0 "W1" H 3400 6670 50  0000 C CNN
-F 1 "TEST_VDD" H 3400 6600 50  0000 C CNN
-F 2 "Measurement_Points:Measurement_Point_Round-SMD-Pad_Small" H 3600 6400 50  0001 C CNN
-F 3 "" H 3600 6400 50  0000 C CNN
-	1    3400 6400
-	1    0    0    -1  
-$EndComp
-$Comp
 L Q_NMOS_GSD Q1
 U 1 1 585590EB
 P 9200 5650
@@ -969,8 +958,6 @@ F 3 "" H 3250 6550 50  0000 C CNN
 	1    3250 6550
 	0    1    1    0   
 $EndComp
-Wire Wire Line
-	3400 6550 3400 6400
 Wire Wire Line
 	3400 6550 3700 6550
 Wire Wire Line
