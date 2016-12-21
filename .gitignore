@@ -1,3 +1,5 @@
+.settings
+
 # Object files
 *.o
 *.ko
