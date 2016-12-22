@@ -3,8 +3,10 @@
  *
  * Functional description:
  *  - After power on, LCD will display 00:00
- *  - Time is set by the "M" & "S" buttons.
- *  - The timer will reset to 00:00 is "M" & "S"
+ *  - After 2 minutes of no action, it turns off the display
+ *  - Minutes are increased by pressing the "M" button.
+ *  - Minutes are decreased by pressing the "S" button.
+ *  - The timer will reset to 00:00 if "M" & "S"
  *  are pressed simultaneously
  *  - After the time has been set, the "ST/SP" button will start the timer
  *  ...
@@ -36,9 +38,6 @@ int main(void) {
     MX_LCD_Init();
     MX_RTC_Init();
 
-    /* Enable Ultra low power mode */
-    HAL_PWREx_EnableUltraLowPower();
-
     /* Stop the RTC clock initially */
     HAL_RTC_MspDeInit(&hrtc);
 
@@ -47,11 +46,54 @@ int main(void) {
 
     while (1) {
 
+        switch (state) {
+        case 0x0:
+            /* time setting mode */
+
+            break;
+
+        case 0x1:
+            /* counting down */
+
+            break;
+
+        case 0x2:
+            /* stopped */
+
+            break;
+
+        case 0x3:
+            /* alarm sounding */
+
+            break;
+
+        case 0x4:
+            /* start pressed */
+            HAL_RTC_MspInit(&hrtc);
+            ampm = 0;
+            state = 0x1;
+            break;
+
+        case 0x5:
+            /* stop pressed */
+            HAL_RTC_MspDeInit(&hrtc);
+            ampm = 1;
+            state = 0x2;
+            break;
+
+        default:
+            break;
+
+        }
+
         if (update_display == 1) {
             update_display = 0;
             /* Update the screen */
             LCD_display(&hlcd, minutes, seconds, ampm);
         }
+
+        /* Enable Ultra low power mode */
+        HAL_PWREx_EnableUltraLowPower();
 
         /* Enter Stop Mode */
         HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
@@ -66,22 +108,25 @@ int main(void) {
  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     if (GPIO_Pin == GPIO_PIN_4) {
-        minutes = 0;
+        ++minutes;
+        seconds = 0;
+        if (minutes > 99) {
+            minutes = 99;
+        }
         update_display = 1;
     } else if (GPIO_Pin == GPIO_PIN_5) {
         seconds = 0;
+        if (minutes > 0) {
+            --minutes;
+        }
         update_display = 1;
     } else if (GPIO_Pin == GPIO_PIN_6) {
-        if (state == 0x0) {
-            // Stopped so start.
-            state = 0x1;
-            HAL_RTC_MspInit(&hrtc);
-            ampm = 0;
-        } else {
-            // Running so stop
-            state = 0x0;
-            HAL_RTC_MspDeInit(&hrtc);
-            ampm = 1;
+        if (state == 0x0 || state == 0x2) {
+            /* Time setting mode || stopped so start pressed */
+            state = 0x4;
+        } else if (state == 0x1) {
+            /* Counting down so stop pressed */
+            state = 0x5;
         }
         update_display = 1;
     }
@@ -91,15 +136,22 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
  * Callback for RTC_IRQHandler()
  */
 void HAL_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc) {
-    seconds++;
-    if (seconds > 59) {
-        seconds = 0;
-        minutes++;
-        if (minutes > 99) {
-            minutes = 0;
-            seconds = 0;
+    if (seconds > 0) {
+        --seconds;
+    }
+    else {
+        if (minutes == 0 && seconds == 0) {
+            /* Sound the alarm */
+            state = 0x3;
+        }
+        else {
+            seconds = 59;
+            if (minutes > 0) {
+                --minutes;
+            }
         }
     }
+
     update_display = 1;
 }
 

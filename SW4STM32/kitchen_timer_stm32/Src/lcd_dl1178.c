@@ -171,3 +171,12 @@ void LCD_display(LCD_HandleTypeDef *hlcd, uint8_t minutes, uint8_t seconds, uint
 
     HAL_LCD_UpdateDisplayRequest(hlcd);
 }
+
+void LCD_blank(LCD_HandleTypeDef *hlcd) {
+    LCD->RAM[LCD_RAM_REGISTER0] = 0;
+    LCD->RAM[LCD_RAM_REGISTER2] = 0;
+    LCD->RAM[LCD_RAM_REGISTER4] = 0;
+    LCD->RAM[LCD_RAM_REGISTER6] = 0;
+    HAL_LCD_UpdateDisplayRequest(hlcd);
+}
+
