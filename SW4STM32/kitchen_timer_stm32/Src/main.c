@@ -20,7 +20,9 @@
 #include "system_clock_conf.h"
 #include "lcd_dl1178.h"
 
-volatile uint8_t state = 0;
+volatile enum main_states state = STATE_SETUP;
+volatile enum button_states button_state = BUTT_NONE;
+enum button_flags button_flag = 0;
 volatile uint8_t minutes = 0;
 volatile uint8_t seconds = 0;
 volatile uint8_t ampm = 1;
@@ -46,42 +48,91 @@ int main(void) {
 
     while (1) {
 
+        /**
+         * Handle the buttons.
+         *
+         * Buttons are read as interrupts so the system can sleep most of the time.
+         */
+        switch (button_state) {
+        case BUTT_M_DOWN:
+            /* Update time once per press */
+            if (!(button_flag & BUTTON_M)) {
+                /* Set this button's flag */
+                button_flag |= BUTTON_M;
+                /* Increase time */
+                ++minutes;
+                if (minutes > 99) {
+                    minutes = 99;
+                }
+                update_display = 1;
+            }
+            break;
+        case BUTT_M_UP:
+            /* Unset this button's flag */
+            button_flag &= ~(BUTTON_M);
+            break;
+        case BUTT_S_DOWN:
+            /* Update time once per press */
+            if (!(button_flag & BUTTON_S)) {
+                /* Set this button's flag */
+                button_flag |= BUTTON_S;
+                /* Decrease time */
+                if (minutes > 0) {
+                    --minutes;
+                }
+                update_display = 1;
+            }
+            break;
+        case BUTT_S_UP:
+            /* Unset this button's flag */
+            button_flag &= ~(BUTTON_S);
+            break;
+        case BUTT_MS:
+            /* Reset time */
+
+            break;
+        case BUTT_STSP_DOWN:
+            if (state == STATE_SETUP || state == STATE_STOPPED) {
+                /* Time setting mode || stopped so start pressed */
+                state = STATE_COUNTDOWN;
+                /* start pressed */
+                HAL_RTC_MspInit(&hrtc);
+            } else if (state == STATE_COUNTDOWN) {
+                /* Counting down so stop pressed */
+                state = STATE_STOPPED;
+                /* stop pressed */
+                HAL_RTC_MspDeInit(&hrtc);
+            }
+            update_display = 1;
+            button_state = BUTT_NONE;
+            break;
+        default:
+            break;
+        }
+
+        /* Main state machine */
         switch (state) {
-        case 0x0:
+        case STATE_SETUP:
             /* time setting mode */
 
             break;
 
-        case 0x1:
+        case STATE_COUNTDOWN:
             /* counting down */
-
+            ampm = 0;
             break;
 
-        case 0x2:
+        case STATE_STOPPED:
             /* stopped */
-
+            ampm = 1;
             break;
 
-        case 0x3:
+        case STATE_ALARM:
             /* alarm sounding */
             HAL_RTC_MspDeInit(&hrtc);
             ampm = 1;
 
-            state = 0x2;
-            break;
-
-        case 0x4:
-            /* start pressed */
-            HAL_RTC_MspInit(&hrtc);
-            ampm = 0;
-            state = 0x1;
-            break;
-
-        case 0x5:
-            /* stop pressed */
-            HAL_RTC_MspDeInit(&hrtc);
-            ampm = 1;
-            state = 0x2;
+            state = STATE_STOPPED;
             break;
 
         default:
@@ -110,26 +161,25 @@ int main(void) {
  * Handles the interrupts which occur on button press.
  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-    if (GPIO_Pin == GPIO_PIN_4) {
-        ++minutes;
-        if (minutes > 99) {
-            minutes = 99;
+    if (HAL_GPIO_ReadPin(GPIOB, GPIO_Pin) == 0x01) {
+        /* Rising edge, button pushed */
+        if (GPIO_Pin == GPIO_PIN_4) {
+            button_state = BUTT_M_DOWN;
+        } else if (GPIO_Pin == GPIO_PIN_5) {
+            button_state = BUTT_S_DOWN;
+        } else if (GPIO_Pin == GPIO_PIN_6) {
+            button_state = BUTT_STSP_DOWN;
         }
-        update_display = 1;
-    } else if (GPIO_Pin == GPIO_PIN_5) {
-        if (minutes > 0) {
-            --minutes;
+    }
+    else {
+        /* Falling edge, button released */
+        if (GPIO_Pin == GPIO_PIN_4) {
+            button_state = BUTT_M_UP;
+        } else if (GPIO_Pin == GPIO_PIN_5) {
+            button_state = BUTT_S_UP;
+        } else if (GPIO_Pin == GPIO_PIN_6) {
+            button_state = BUTT_STSP_UP;
         }
-        update_display = 1;
-    } else if (GPIO_Pin == GPIO_PIN_6) {
-        if (state == 0x0 || state == 0x2) {
-            /* Time setting mode || stopped so start pressed */
-            state = 0x4;
-        } else if (state == 0x1) {
-            /* Counting down so stop pressed */
-            state = 0x5;
-        }
-        update_display = 1;
     }
 }
 
@@ -143,7 +193,7 @@ void HAL_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc) {
     else {
         if (minutes == 0 && seconds == 0) {
             /* Sound the alarm */
-            state = 0x3;
+            state = STATE_ALARM;
         }
         else {
             seconds = 59;
