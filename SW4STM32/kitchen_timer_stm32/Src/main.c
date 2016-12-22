@@ -64,7 +64,10 @@ int main(void) {
 
         case 0x3:
             /* alarm sounding */
+            HAL_RTC_MspDeInit(&hrtc);
+            ampm = 1;
 
+            state = 0x2;
             break;
 
         case 0x4:
@@ -109,13 +112,11 @@ int main(void) {
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     if (GPIO_Pin == GPIO_PIN_4) {
         ++minutes;
-        seconds = 0;
         if (minutes > 99) {
             minutes = 99;
         }
         update_display = 1;
     } else if (GPIO_Pin == GPIO_PIN_5) {
-        seconds = 0;
         if (minutes > 0) {
             --minutes;
         }
