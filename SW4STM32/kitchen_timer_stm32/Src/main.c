@@ -149,8 +149,16 @@ int main(void) {
         /* Enable Ultra low power mode */
         HAL_PWREx_EnableUltraLowPower();
 
+
+        //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+        /* Change the systick interrupt to not wake up every millisecond */
+        HAL_SYSTICK_Config(1);
         /* Enter Stop Mode */
         HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
+
+        /* Reset the systick interrupt */
+        HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);
+        //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 
     }
 }
