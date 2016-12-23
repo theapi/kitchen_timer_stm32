@@ -151,13 +151,19 @@ int main(void) {
 
 
         //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-        /* Change the systick interrupt to not wake up every millisecond */
-        HAL_SYSTICK_Config(1);
+        /* Disable the systick interrupt to not wake up every millisecond */
+        SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk |
+                   SysTick_CTRL_ENABLE_Msk;
+
         /* Enter Stop Mode */
         HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
 
-        /* Reset the systick interrupt */
-        HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);
+        /* Enable the systick interrupt */
+        SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk |
+                   SysTick_CTRL_TICKINT_Msk   |
+                   SysTick_CTRL_ENABLE_Msk;
+
+
         //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 
     }
