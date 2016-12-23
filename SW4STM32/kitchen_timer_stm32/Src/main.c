@@ -156,6 +156,8 @@ int main(void) {
                    SysTick_CTRL_ENABLE_Msk;
 
         /* Enter Stop Mode */
+        __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_MSI);
+        __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
         HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
 
         /* Enable the systick interrupt */
