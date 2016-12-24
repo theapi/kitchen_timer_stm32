@@ -24,7 +24,7 @@ volatile enum main_states state = STATE_SETUP;
 volatile enum button_states button_state = BUTT_NONE;
 enum button_flags button_flag = 0;
 volatile uint8_t minutes = 0;
-volatile uint8_t seconds = 0;
+volatile uint8_t seconds = 5;
 volatile uint8_t ampm = 1;
 volatile uint8_t update_display = 1;
 
@@ -40,6 +40,11 @@ int main(void) {
     MX_LCD_Init();
     MX_RTC_Init();
 
+    /* Enable Ultra low power mode */
+    HAL_PWREx_EnableUltraLowPower();
+
+    HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN1);
+
     /* Stop the RTC clock initially */
     HAL_RTC_MspDeInit(&hrtc);
 
@@ -47,6 +52,12 @@ int main(void) {
     LCD_display(&hlcd, minutes, seconds, ampm);
 
     while (1) {
+
+        if (update_display == 1) {
+            update_display = 0;
+            /* Update the screen */
+            LCD_display(&hlcd, minutes, seconds, ampm);
+        }
 
         /**
          * Handle the buttons.
@@ -112,6 +123,16 @@ int main(void) {
 
         /* Main state machine */
         switch (state) {
+        case STATE_OFF:
+            /* Go into very low power mode */
+            HAL_RTC_MspDeInit(&hrtc);
+            __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
+            HAL_PWR_EnterSTANDBYMode();
+
+            /* Woke up via PWR_WAKEUP_PIN1 */
+            state = STATE_SETUP;
+            update_display = 1;
+            break;
         case STATE_SETUP:
             /* time setting mode */
 
@@ -132,7 +153,8 @@ int main(void) {
             HAL_RTC_MspDeInit(&hrtc);
             ampm = 1;
 
-            state = STATE_STOPPED;
+
+            state = STATE_OFF;
             break;
 
         default:
@@ -140,31 +162,23 @@ int main(void) {
 
         }
 
-        if (update_display == 1) {
-            update_display = 0;
-            /* Update the screen */
-            LCD_display(&hlcd, minutes, seconds, ampm);
-        }
 
-        /* Enable Ultra low power mode */
-        HAL_PWREx_EnableUltraLowPower();
+        if (state != STATE_OFF) {
+            //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+            /* Disable the systick interrupt to not wake up every millisecond */
+            SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk |
+                       SysTick_CTRL_ENABLE_Msk;
 
+            /* Enter Stop Mode */
+            __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_MSI);
+            __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
+            HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
 
-        //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-        /* Disable the systick interrupt to not wake up every millisecond */
-        SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk |
-                   SysTick_CTRL_ENABLE_Msk;
-
-        /* Enter Stop Mode */
-        __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_MSI);
-        __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
-        HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
-
-        /* Enable the systick interrupt */
-        SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk |
-                   SysTick_CTRL_TICKINT_Msk   |
-                   SysTick_CTRL_ENABLE_Msk;
-
+            /* Enable the systick interrupt */
+            SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk |
+                       SysTick_CTRL_TICKINT_Msk   |
+                       SysTick_CTRL_ENABLE_Msk;
+       }
 
         //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 

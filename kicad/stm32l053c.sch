@@ -425,7 +425,6 @@ NoConn ~ 6550 3400
 NoConn ~ 6550 3500
 NoConn ~ 6550 3600
 NoConn ~ 6550 3700
-NoConn ~ 4600 2300
 NoConn ~ 4600 2700
 NoConn ~ 4600 3400
 NoConn ~ 4600 3500
@@ -954,4 +953,22 @@ F 3 "" H 1150 5750 50  0000 C CNN
 	1    1150 5750
 	1    0    0    -1  
 $EndComp
+Text Label 3900 2300 0    60   ~ 0
+WAKEUP_PIN1
+Wire Wire Line
+	3500 2300 4600 2300
+Text Label 3500 1900 2    60   ~ 0
+BUTTON0
+Text Label 3500 2100 2    60   ~ 0
+BUTTON1
+Text Label 3500 2300 2    60   ~ 0
+BUTTON2
+Wire Wire Line
+	3900 1900 3900 2300
+Connection ~ 3900 2100
+Wire Wire Line
+	3500 1900 3900 1900
+Wire Wire Line
+	3500 2100 3900 2100
+Connection ~ 3900 2300
 $EndSCHEMATC

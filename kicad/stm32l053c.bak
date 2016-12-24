@@ -405,45 +405,6 @@ F 3 "" H 3600 5700 50  0000 C CNN
 	1    3600 5700
 	1    0    0    -1  
 $EndComp
-$Comp
-L LED D1
-U 1 1 58076AE7
-P 9300 2200
-F 0 "D1" H 9300 2300 50  0000 C CNN
-F 1 "LED" H 9300 2100 50  0000 C CNN
-F 2 "LEDs:LED_0805" H 9300 2200 50  0001 C CNN
-F 3 "" H 9300 2200 50  0000 C CNN
-	1    9300 2200
-	-1   0    0    -1  
-$EndComp
-$Comp
-L R R1
-U 1 1 580770D7
-P 8950 2200
-F 0 "R1" V 9030 2200 50  0000 C CNN
-F 1 "820" V 8950 2200 50  0000 C CNN
-F 2 "Resistors_SMD:R_0805_HandSoldering" V 8880 2200 50  0001 C CNN
-F 3 "" H 8950 2200 50  0000 C CNN
-	1    8950 2200
-	0    -1   1    0   
-$EndComp
-$Comp
-L Earth #PWR014
-U 1 1 58077163
-P 9600 2300
-F 0 "#PWR014" H 9600 2050 50  0001 C CNN
-F 1 "Earth" H 9600 2150 50  0001 C CNN
-F 2 "" H 9600 2300 50  0000 C CNN
-F 3 "" H 9600 2300 50  0000 C CNN
-	1    9600 2300
-	-1   0    0    -1  
-$EndComp
-Wire Wire Line
-	9600 2300 9600 2200
-Wire Wire Line
-	9600 2200 9500 2200
-Wire Wire Line
-	8600 2200 8800 2200
 Wire Wire Line
 	5200 1750 5200 2000
 Text Label 7100 2600 2    60   ~ 0
@@ -502,8 +463,6 @@ Wire Wire Line
 	3450 5550 3450 5700
 Connection ~ 3600 5700
 NoConn ~ 4600 4700
-Text GLabel 8600 2200 0    60   Input ~ 0
-PA5
 Text Label 8500 3350 0    60   ~ 0
 LCD_COM0
 Text Label 8500 3450 0    60   ~ 0
