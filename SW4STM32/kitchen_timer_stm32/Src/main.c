@@ -226,7 +226,7 @@ int main(void) {
 }
 
 /**
- * If nothing has happen for a while, turn off.
+ * If nothing has happened for a while, turn off.
  */
 void idle_timeout() {
     if (idle_time > MAX_IDLE_TIME) {
