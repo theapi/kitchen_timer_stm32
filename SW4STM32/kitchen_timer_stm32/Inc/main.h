@@ -10,8 +10,10 @@
 void Error_Handler(void);
 void increase_time(void);
 void decrease_time(void);
+void idle_timeout(void);
 
 enum main_states {
+    STATE_INIT,
     STATE_OFF,
     STATE_SETUP,
     STATE_COUNTDOWN,
@@ -37,6 +39,7 @@ enum button_flags {
 };
 
 #define LONG_PRESS 250U
+#define MAX_IDLE_TIME 120U
 
 #endif /* __MAIN_H */
 

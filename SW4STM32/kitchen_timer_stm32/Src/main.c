@@ -20,14 +20,16 @@
 #include "system_clock_conf.h"
 #include "lcd_dl1178.h"
 
-volatile enum main_states state = STATE_SETUP;
+volatile enum main_states state = STATE_INIT;
 volatile enum button_states button_state = BUTT_NONE;
 enum button_flags button_flag = 0;
 volatile uint8_t minutes = 0;
 volatile uint8_t seconds = 0;
 volatile uint8_t ampm = 1;
 volatile uint8_t update_display = 1;
+volatile uint32_t idle_time = 0x00U;
 volatile uint32_t button_down = 0x00U;
+
 
 int main(void) {
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
@@ -46,12 +48,8 @@ int main(void) {
 
     HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN1);
 
-    /* Stop the RTC clock initially */
-    HAL_RTC_MspDeInit(&hrtc);
-
     /* After power on, LCD will display 00:00 */
     LCD_display(&hlcd, minutes, seconds, ampm);
-
 
 
     while (1) {
@@ -124,25 +122,15 @@ int main(void) {
             break;
         case BUTT_MS:
             /* Reset time */
-            minutes = 0;
-            seconds = 0;
-            button_flag = 0;
-            button_down = 0;
-            update_display = 1;
-            button_state = BUTT_NONE;
-            state = STATE_SETUP;
+            state = STATE_INIT;
             break;
         case BUTT_STSP_DOWN:
             if (state == STATE_SETUP || state == STATE_STOPPED) {
                 /* Time setting mode || stopped so start pressed */
                 state = STATE_COUNTDOWN;
-                /* start pressed */
-                HAL_RTC_MspInit(&hrtc);
             } else if (state == STATE_COUNTDOWN) {
                 /* Counting down so stop pressed */
                 state = STATE_STOPPED;
-                /* stop pressed */
-                HAL_RTC_MspDeInit(&hrtc);
             }
             update_display = 1;
             button_state = BUTT_NONE;
@@ -153,6 +141,16 @@ int main(void) {
 
         /* Main state machine */
         switch (state) {
+        case STATE_INIT:
+            HAL_RTC_MspInit(&hrtc);
+            minutes = 0;
+            seconds = 0;
+            button_flag = 0;
+            button_down = 0;
+            button_state = BUTT_NONE;
+            state = STATE_SETUP;
+            update_display = 1;
+            break;
         case STATE_OFF:
             /* Go into very low power mode */
             HAL_RTC_MspDeInit(&hrtc);
@@ -160,12 +158,12 @@ int main(void) {
             HAL_PWR_EnterSTANDBYMode();
 
             /* Woke up via PWR_WAKEUP_PIN1 */
-            state = STATE_SETUP;
-            update_display = 1;
+            state = STATE_INIT;
             break;
         case STATE_SETUP:
             /* time setting mode */
             ampm = 1;
+            idle_timeout();
             break;
 
         case STATE_COUNTDOWN:
@@ -176,11 +174,11 @@ int main(void) {
         case STATE_STOPPED:
             /* stopped */
             ampm = 1;
+            idle_timeout();
             break;
 
         case STATE_ALARM:
             /* alarm sounding */
-            HAL_RTC_MspDeInit(&hrtc);
             ampm = 1;
 
 
@@ -188,6 +186,7 @@ int main(void) {
             break;
 
         default:
+            idle_timeout();
             break;
 
         }
@@ -226,6 +225,14 @@ int main(void) {
     }
 }
 
+/**
+ * If nothing has happen for a while, turn off.
+ */
+void idle_timeout() {
+    if (idle_time > MAX_IDLE_TIME) {
+        state = STATE_OFF;
+    }
+}
 
 /**
  *  Increase the countdown time.
@@ -254,6 +261,7 @@ void decrease_time() {
  * Handles the interrupts which occur on button press.
  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+    idle_time = 0;
     if (HAL_GPIO_ReadPin(GPIOB, GPIO_Pin) == 0x01) {
         /* Rising edge, button pushed */
         if (GPIO_Pin == GPIO_PIN_4) {
@@ -280,7 +288,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
  * Callback for RTC_IRQHandler()
  */
 void HAL_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc) {
+    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
     if (state == STATE_COUNTDOWN) {
+        idle_time = 0;
         if (seconds > 0) {
             --seconds;
         }
@@ -298,6 +308,9 @@ void HAL_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc) {
         }
 
         update_display = 1;
+    }
+    else {
+        ++idle_time;
     }
 }
 
