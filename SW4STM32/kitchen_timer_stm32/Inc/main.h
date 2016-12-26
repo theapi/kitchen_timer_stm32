@@ -5,8 +5,11 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
+#include "stdint.h"
 
 void Error_Handler(void);
+void increase_time(void);
+void decrease_time(void);
 
 enum main_states {
     STATE_OFF,
@@ -32,6 +35,8 @@ enum button_flags {
     BUTTON_S    = 2,
     BUTTON_STSP = 4,
 };
+
+#define LONG_PRESS 250U
 
 #endif /* __MAIN_H */
 
