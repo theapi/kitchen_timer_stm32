@@ -7,10 +7,12 @@
 
 #include "stdint.h"
 
+
 void Error_Handler(void);
 void increase_time(void);
 void decrease_time(void);
 void idle_timeout(void);
+
 
 enum main_states {
     STATE_INIT,
@@ -40,6 +42,7 @@ enum button_flags {
 
 #define LONG_PRESS 250U
 #define MAX_IDLE_TIME 120U
+#define EEPROM_ADDRESS 0U
 
 #endif /* __MAIN_H */
 

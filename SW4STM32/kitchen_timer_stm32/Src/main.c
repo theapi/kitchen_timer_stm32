@@ -31,6 +31,9 @@ volatile uint32_t idle_time = 0x00U;
 volatile uint32_t button_down = 0x00U;
 
 
+HAL_StatusTypeDef EEPROM_byte_write(uint32_t address, uint8_t data);
+uint8_t EEPROM_byte_read(uint32_t address);
+
 int main(void) {
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
     HAL_Init();
@@ -128,6 +131,10 @@ int main(void) {
             if (state == STATE_SETUP || state == STATE_STOPPED) {
                 /* Time setting mode || stopped so start pressed */
                 state = STATE_COUNTDOWN;
+                /* Store this value for retrieval after shutdown */
+                if (EEPROM_byte_read(EEPROM_ADDRESS) != minutes) {
+                    EEPROM_byte_write(EEPROM_ADDRESS, minutes);
+                }
             } else if (state == STATE_COUNTDOWN) {
                 /* Counting down so stop pressed */
                 state = STATE_STOPPED;
@@ -143,7 +150,7 @@ int main(void) {
         switch (state) {
         case STATE_INIT:
             HAL_RTC_MspInit(&hrtc);
-            minutes = 0;
+            minutes = EEPROM_byte_read(EEPROM_ADDRESS);
             seconds = 0;
             button_flag = 0;
             button_down = 0;
@@ -256,6 +263,30 @@ void decrease_time() {
         minutes = 99;
     }
     update_display = 1;
+}
+
+/**
+ * Write to the EEPROM (well flash actually, EEPROM is emulated in STM32).
+ */
+HAL_StatusTypeDef EEPROM_byte_write(uint32_t address, uint8_t data) {
+    HAL_StatusTypeDef  status;
+    /* Data EEPROM address see reference manual 3.3.1 addresses: 0x0808 0000 - 0x0808 07FF */
+    address = address + 0x08080000;
+    /* Unprotect the EEPROM to allow writing */
+    HAL_FLASHEx_DATAEEPROM_Unlock();
+    /* Write the data */
+    status = HAL_FLASHEx_DATAEEPROM_Program(TYPEPROGRAMDATA_BYTE, address, data);
+    /* Reprotect the EEPROM */
+    HAL_FLASHEx_DATAEEPROM_Lock();
+    return status;
+}
+
+uint8_t EEPROM_byte_read(uint32_t address) {
+    uint8_t tmp = 0;
+    address = address + 0x08080000;
+    tmp = *(__IO uint32_t*)address;
+
+    return tmp;
 }
 
 /**
