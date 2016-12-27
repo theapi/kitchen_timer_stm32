@@ -240,7 +240,7 @@ void idle_timeout() {
 void increase_time() {
     ++minutes;
     if (minutes > 99) {
-        minutes = 99;
+        minutes = 0;
     }
     update_display = 1;
 }
@@ -251,6 +251,9 @@ void increase_time() {
 void decrease_time() {
     if (minutes > 0) {
         --minutes;
+    }
+    else {
+        minutes = 99;
     }
     update_display = 1;
 }
