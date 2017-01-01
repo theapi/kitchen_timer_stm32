@@ -13,7 +13,6 @@ void increase_time(void);
 void decrease_time(void);
 void idle_timeout(void);
 
-
 enum main_states {
     STATE_INIT,
     STATE_RESET,

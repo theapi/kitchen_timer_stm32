@@ -20,6 +20,7 @@
 #include "tim.h"
 #include "system_clock_conf.h"
 #include "lcd_dl1178.h"
+#include "eeprom.h"
 
 volatile enum main_states state = STATE_INIT;
 volatile enum button_states button_state = BUTT_NONE;
@@ -33,8 +34,7 @@ volatile uint32_t button_down = 0x00U;
 volatile uint32_t alarm_duration_timer = 0x00U;
 volatile uint32_t alarm_pulse_timer = 0x00U;
 
-HAL_StatusTypeDef EEPROM_byte_write(uint32_t address, uint8_t data);
-uint8_t EEPROM_byte_read(uint32_t address);
+
 
 int main(void) {
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
@@ -51,12 +51,7 @@ int main(void) {
 
     /* Enable Ultra low power mode */
     HAL_PWREx_EnableUltraLowPower();
-
     HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN1);
-
-    /* After power on, LCD will display 00:00 */
-    //LCD_display(&hlcd, minutes, seconds, ampm);
-
 
     while (1) {
 
@@ -138,9 +133,14 @@ int main(void) {
                 if (EEPROM_byte_read(EEPROM_ADDRESS) != minutes) {
                    EEPROM_byte_write(EEPROM_ADDRESS, minutes);
                 }
-            } else if (state == STATE_COUNTDOWN) {
+            }
+            else if (state == STATE_COUNTDOWN) {
                 /* Counting down so stop pressed */
                 state = STATE_STOPPED;
+            }
+            else if (alarm_duration_timer > 0) {
+                /* If alarm is on, stop it */
+                state = STATE_ALARM_STOP;
             }
             update_display = 1;
             button_state = BUTT_NONE;
@@ -321,30 +321,6 @@ void decrease_time() {
         minutes = 99;
     }
     update_display = 1;
-}
-
-/**
- * Write to the EEPROM (well flash actually, EEPROM is emulated in STM32).
- */
-HAL_StatusTypeDef EEPROM_byte_write(uint32_t address, uint8_t data) {
-    HAL_StatusTypeDef  status;
-    /* Data EEPROM address see reference manual 3.3.1 addresses: 0x0808 0000 - 0x0808 07FF */
-    address = address + 0x08080000;
-    /* Unprotect the EEPROM to allow writing */
-    HAL_FLASHEx_DATAEEPROM_Unlock();
-    /* Write the data */
-    status = HAL_FLASHEx_DATAEEPROM_Program(TYPEPROGRAMDATA_BYTE, address, data);
-    /* Reprotect the EEPROM */
-    HAL_FLASHEx_DATAEEPROM_Lock();
-    return status;
-}
-
-uint8_t EEPROM_byte_read(uint32_t address) {
-    uint8_t tmp = 0;
-    address = address + 0x08080000;
-    tmp = *(__IO uint32_t*)address;
-
-    return tmp;
 }
 
 /**
