@@ -1173,7 +1173,7 @@ Discarded input sections
                 0x00000000        0x4 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2c.o
  .debug_info    0x00000000     0x250b Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2c.o
  .debug_abbrev  0x00000000      0x2a4 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2c.o
- .debug_loc     0x00000000     0x1e5e Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2c.o
+ .debug_loc     0x00000000     0x1e5d Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2c.o
  .debug_aranges
                 0x00000000      0x160 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2c.o
  .debug_ranges  0x00000000      0x150 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2c.o
@@ -4792,7 +4792,7 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
  .debug_line    0x0000e9e9      0x889 Src/system_stm32l0xx.o
  .debug_line    0x0000f272      0x8b8 Src/tim.o
 
-.debug_info     0x00000000     0xd86f
+.debug_info     0x00000000     0xd875
  .debug_info    0x00000000       0xbd Drivers/CMSIS/Device/ST/STM32L0xx/Source/Templates/gcc/startup_stm32l053xx.o
  .debug_info    0x000000bd      0x73a Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.o
  .debug_info    0x000007f7      0x8d7 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_cortex.o
@@ -4811,13 +4811,13 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
  .debug_info    0x000095e3      0x581 Src/gpio.o
  .debug_info    0x00009b64      0x63b Src/lcd.o
  .debug_info    0x0000a19f      0x3a3 Src/lcd_dl1178.o
- .debug_info    0x0000a542     0x11fc Src/main.o
- .debug_info    0x0000b73e      0x7b0 Src/rtc.o
- .debug_info    0x0000beee      0x30b Src/stm32l0xx_hal_msp.o
- .debug_info    0x0000c1f9      0x415 Src/stm32l0xx_it.o
- .debug_info    0x0000c60e      0x4d5 Src/system_clock_conf.o
- .debug_info    0x0000cae3      0x37b Src/system_stm32l0xx.o
- .debug_info    0x0000ce5e      0xa11 Src/tim.o
+ .debug_info    0x0000a542     0x1202 Src/main.o
+ .debug_info    0x0000b744      0x7b0 Src/rtc.o
+ .debug_info    0x0000bef4      0x30b Src/stm32l0xx_hal_msp.o
+ .debug_info    0x0000c1ff      0x415 Src/stm32l0xx_it.o
+ .debug_info    0x0000c614      0x4d5 Src/system_clock_conf.o
+ .debug_info    0x0000cae9      0x37b Src/system_stm32l0xx.o
+ .debug_info    0x0000ce64      0xa11 Src/tim.o
 
 .debug_abbrev   0x00000000     0x2b04
  .debug_abbrev  0x00000000       0x12 Drivers/CMSIS/Device/ST/STM32L0xx/Source/Templates/gcc/startup_stm32l053xx.o
@@ -5074,7 +5074,7 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
  .debug_str     0x0007bef5      0x1fc Src/lcd_dl1178.o
                               0x78efb (size before relaxing)
  .debug_str     0x0007c0f1      0x2d7 Src/main.o
-                              0x798c5 (size before relaxing)
+                              0x798d1 (size before relaxing)
  .debug_str     0x0007c3c8       0x17 Src/rtc.o
                               0x790ec (size before relaxing)
  .debug_str     0x0007c3df       0x27 Src/stm32l0xx_hal_msp.o

@@ -16,6 +16,7 @@ void idle_timeout(void);
 
 enum main_states {
     STATE_INIT,
+    STATE_RESET,
     STATE_OFF,
     STATE_SETUP,
     STATE_COUNTDOWN,

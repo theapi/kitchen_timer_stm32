@@ -128,7 +128,7 @@ int main(void) {
             break;
         case BUTT_MS:
             /* Reset time */
-            state = STATE_INIT;
+            state = STATE_RESET;
             break;
         case BUTT_STSP_DOWN:
             if (state == STATE_SETUP || state == STATE_STOPPED) {
@@ -157,7 +157,16 @@ int main(void) {
 
             HAL_RTC_MspInit(&hrtc);
             minutes = EEPROM_byte_read(EEPROM_ADDRESS);
-            seconds = 4;
+            seconds = 0;
+            button_flag = 0;
+            button_down = 0;
+            button_state = BUTT_NONE;
+            state = STATE_SETUP;
+            update_display = 1;
+            break;
+        case STATE_RESET:
+            minutes = 0;
+            seconds = 0;
             button_flag = 0;
             button_down = 0;
             button_state = BUTT_NONE;
