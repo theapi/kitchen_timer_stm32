@@ -17,6 +17,7 @@
 #include "lcd.h"
 #include "rtc.h"
 #include "gpio.h"
+#include "tim.h"
 #include "system_clock_conf.h"
 #include "lcd_dl1178.h"
 
@@ -29,7 +30,8 @@ volatile uint8_t ampm = 1;
 volatile uint8_t update_display = 1;
 volatile uint32_t idle_time = 0x00U;
 volatile uint32_t button_down = 0x00U;
-
+volatile uint32_t alarm_duration_timer = 0x00U;
+volatile uint32_t alarm_pulse_timer = 0x00U;
 
 HAL_StatusTypeDef EEPROM_byte_write(uint32_t address, uint8_t data);
 uint8_t EEPROM_byte_read(uint32_t address);
@@ -45,6 +47,7 @@ int main(void) {
     MX_GPIO_Init();
     MX_LCD_Init();
     MX_RTC_Init();
+    MX_TIM2_Init();
 
     /* Enable Ultra low power mode */
     HAL_PWREx_EnableUltraLowPower();
@@ -133,7 +136,7 @@ int main(void) {
                 state = STATE_COUNTDOWN;
                 /* Store this value for retrieval after shutdown */
                 if (EEPROM_byte_read(EEPROM_ADDRESS) != minutes) {
-                    EEPROM_byte_write(EEPROM_ADDRESS, minutes);
+                   // EEPROM_byte_write(EEPROM_ADDRESS, minutes);
                 }
             } else if (state == STATE_COUNTDOWN) {
                 /* Counting down so stop pressed */
@@ -150,8 +153,9 @@ int main(void) {
         switch (state) {
         case STATE_INIT:
             HAL_RTC_MspInit(&hrtc);
-            minutes = EEPROM_byte_read(EEPROM_ADDRESS);
-            seconds = 0;
+            //minutes = EEPROM_byte_read(EEPROM_ADDRESS);
+            minutes = 0;
+            seconds = 4;
             button_flag = 0;
             button_down = 0;
             button_state = BUTT_NONE;
@@ -184,11 +188,44 @@ int main(void) {
             idle_timeout();
             break;
 
-        case STATE_ALARM:
-            /* alarm sounding */
+        case STATE_ALARM_START:
+            /* start alarm sounding */
             ampm = 1;
+            alarm_duration_timer = HAL_GetTick();
+            /* 62 ms pulses of 2048Hz */
+            HAL_TIM_Base_MspInit(&htim2);
 
+            state = STATE_ALARM_ON_HIGH;
+            break;
 
+        case STATE_ALARM_ON_HIGH:
+
+            if (alarm_pulse_timer == 0) {
+                alarm_pulse_timer = HAL_GetTick();
+                /* PB11 buzzing */
+                HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
+            }
+            else if ((HAL_GetTick() - alarm_pulse_timer ) > ALARM_PULSE) {
+                HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_4);
+                state = STATE_ALARM_ON_LOW;
+            }
+
+            if ((HAL_GetTick() - alarm_duration_timer ) > ALARM_DURATION) {
+                state = STATE_ALARM_STOP;
+            }
+            break;
+
+        case STATE_ALARM_ON_LOW:
+
+            if ((HAL_GetTick() - alarm_pulse_timer ) > ALARM_PULSE * 2) {
+                state = STATE_ALARM_ON_HIGH;
+                alarm_pulse_timer = 0;
+            }
+            break;
+
+        case STATE_ALARM_STOP:
+            HAL_TIM_Base_MspDeInit(&htim2);
+            alarm_duration_timer = 0;
             state = STATE_OFF;
             break;
 
@@ -204,7 +241,7 @@ int main(void) {
             LCD_display(&hlcd, minutes, seconds, ampm);
         }
 
-        if (state != STATE_OFF && button_down == 0) {
+        if (state != STATE_OFF && button_down == 0 && alarm_duration_timer == 0) {
             //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 
             /* Disable the systick interrupt to not wake up every millisecond */
@@ -322,7 +359,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
  * Callback for RTC_IRQHandler()
  */
 void HAL_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc) {
-    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+    //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
     if (state == STATE_COUNTDOWN) {
         idle_time = 0;
         if (seconds > 0) {
@@ -331,7 +368,7 @@ void HAL_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc) {
         else {
             if (minutes == 0 && seconds == 0) {
                 /* Sound the alarm */
-                state = STATE_ALARM;
+                state = STATE_ALARM_START;
             }
             else {
                 seconds = 59;

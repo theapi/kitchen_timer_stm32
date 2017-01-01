@@ -421,11 +421,9 @@ NoConn ~ 6550 2500
 NoConn ~ 6550 3000
 NoConn ~ 6550 3100
 NoConn ~ 6550 3300
-NoConn ~ 6550 3400
 NoConn ~ 6550 3500
 NoConn ~ 6550 3600
 NoConn ~ 6550 3700
-NoConn ~ 4600 2300
 NoConn ~ 4600 2700
 NoConn ~ 4600 3400
 NoConn ~ 4600 3500
@@ -889,23 +887,8 @@ F 3 "" H 9300 5150 50  0000 C CNN
 	1    9300 5150
 	1    0    0    -1  
 $EndComp
-$Comp
-L Q_NMOS_GSD Q1
-U 1 1 585590EB
-P 9200 5650
-F 0 "Q1" H 9500 5700 50  0000 R CNN
-F 1 "Q_NMOS_GSD" H 9850 5600 50  0000 R CNN
-F 2 "TO_SOT_Packages_SMD:SOT-23_Handsoldering" H 9400 5750 50  0001 C CNN
-F 3 "" H 9200 5650 50  0000 C CNN
-	1    9200 5650
-	1    0    0    -1  
-$EndComp
-Text Label 7100 3800 2    60   ~ 0
-PB15
-Wire Wire Line
-	6550 3800 7100 3800
-Text Label 8200 5650 0    60   ~ 0
-PB15
+Text Label 7100 3400 2    60   ~ 0
+BUZZER
 $Comp
 L R R7
 U 1 1 5857A47C
@@ -952,6 +935,39 @@ F 1 "Earth" H 1150 5600 50  0001 C CNN
 F 2 "" H 1150 5750 50  0000 C CNN
 F 3 "" H 1150 5750 50  0000 C CNN
 	1    1150 5750
+	1    0    0    -1  
+$EndComp
+Text Label 3900 2300 0    60   ~ 0
+WAKEUP_PIN1
+Wire Wire Line
+	3500 2300 4600 2300
+Text Label 3500 1900 2    60   ~ 0
+BUTTON0
+Text Label 3500 2100 2    60   ~ 0
+BUTTON1
+Text Label 3500 2300 2    60   ~ 0
+BUTTON2
+Wire Wire Line
+	3900 1900 3900 2300
+Connection ~ 3900 2100
+Wire Wire Line
+	3500 1900 3900 1900
+Wire Wire Line
+	3500 2100 3900 2100
+Connection ~ 3900 2300
+Wire Wire Line
+	6550 3400 7100 3400
+Text Label 8200 5650 0    60   ~ 0
+BUZZER
+$Comp
+L Q_PNP_BEC Q?
+U 1 1 586901C2
+P 9200 5650
+F 0 "Q?" H 9400 5700 50  0000 L CNN
+F 1 "Q_PNP_BEC" H 9400 5600 50  0000 L CNN
+F 2 "" H 9400 5750 50  0000 C CNN
+F 3 "" H 9200 5650 50  0000 C CNN
+	1    9200 5650
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC

@@ -20,7 +20,10 @@ enum main_states {
     STATE_SETUP,
     STATE_COUNTDOWN,
     STATE_STOPPED,
-    STATE_ALARM,
+    STATE_ALARM_START,
+    STATE_ALARM_ON_HIGH,
+    STATE_ALARM_ON_LOW,
+    STATE_ALARM_STOP,
 };
 
 enum button_states {
@@ -43,6 +46,8 @@ enum button_flags {
 #define LONG_PRESS 250U
 #define MAX_IDLE_TIME 120U
 #define EEPROM_ADDRESS 0U
+#define ALARM_DURATION 6000U
+#define ALARM_PULSE 62U
 
 #endif /* __MAIN_H */
 
