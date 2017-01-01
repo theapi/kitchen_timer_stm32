@@ -136,7 +136,7 @@ int main(void) {
                 state = STATE_COUNTDOWN;
                 /* Store this value for retrieval after shutdown */
                 if (EEPROM_byte_read(EEPROM_ADDRESS) != minutes) {
-                   // EEPROM_byte_write(EEPROM_ADDRESS, minutes);
+                   EEPROM_byte_write(EEPROM_ADDRESS, minutes);
                 }
             } else if (state == STATE_COUNTDOWN) {
                 /* Counting down so stop pressed */
@@ -152,9 +152,11 @@ int main(void) {
         /* Main state machine */
         switch (state) {
         case STATE_INIT:
+            /* Low on the alarm triggered pin */
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
+
             HAL_RTC_MspInit(&hrtc);
-            //minutes = EEPROM_byte_read(EEPROM_ADDRESS);
-            minutes = 0;
+            minutes = EEPROM_byte_read(EEPROM_ADDRESS);
             seconds = 4;
             button_flag = 0;
             button_down = 0;
@@ -195,6 +197,10 @@ int main(void) {
             /* 62 ms pulses of 2048Hz */
             HAL_TIM_Base_MspInit(&htim2);
 
+            alarm_pulse_timer = 0;
+            /* High on the alarm triggered pin */
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_SET);
+
             state = STATE_ALARM_ON_HIGH;
             break;
 
@@ -225,6 +231,8 @@ int main(void) {
 
         case STATE_ALARM_STOP:
             HAL_TIM_Base_MspDeInit(&htim2);
+            /* Low on the alarm triggered pin */
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
             alarm_duration_timer = 0;
             state = STATE_OFF;
             break;
