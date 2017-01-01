@@ -135,6 +135,9 @@ const uint32_t lcd_digits[4][11][4] = {
     },
 };
 
+/**
+ * Show the minutes, seconds & M/S on the display.
+ */
 void LCD_display(LCD_HandleTypeDef *hlcd, uint8_t minutes, uint8_t seconds, uint8_t ampm) {
 
     uint8_t minutes_tens = 0;
@@ -172,6 +175,23 @@ void LCD_display(LCD_HandleTypeDef *hlcd, uint8_t minutes, uint8_t seconds, uint
     HAL_LCD_UpdateDisplayRequest(hlcd);
 }
 
+/**
+ * Start blinking the display.
+ */
+void LCD_blink_start(LCD_HandleTypeDef *hlcd) {
+    LCD->FCR |= LCD_BLINKMODE_ALLSEG_ALLCOM | LCD_BLINKFREQUENCY_DIV512;
+}
+
+/**
+ * Stop blinking the display.
+ */
+void LCD_blink_stop(LCD_HandleTypeDef *hlcd) {
+    LCD->FCR &= ~(LCD_BLINKMODE_ALLSEG_ALLCOM);
+}
+
+/**
+ * Clear the display.
+ */
 void LCD_blank(LCD_HandleTypeDef *hlcd) {
     LCD->RAM[LCD_RAM_REGISTER0] = 0;
     LCD->RAM[LCD_RAM_REGISTER2] = 0;

@@ -45,6 +45,8 @@
 
 
 void LCD_display(LCD_HandleTypeDef *hlcd, uint8_t minutes, uint8_t seconds, uint8_t ampm);
+void LCD_blink_start(LCD_HandleTypeDef *hlcd);
+void LCD_blink_stop(LCD_HandleTypeDef *hlcd);
 void LCD_blank(LCD_HandleTypeDef *hlcd);
 
 #ifdef __cplusplus

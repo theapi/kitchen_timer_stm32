@@ -55,7 +55,7 @@ int main(void) {
     HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN1);
 
     /* After power on, LCD will display 00:00 */
-    LCD_display(&hlcd, minutes, seconds, ampm);
+    //LCD_display(&hlcd, minutes, seconds, ampm);
 
 
     while (1) {
@@ -210,6 +210,9 @@ int main(void) {
             /* High on the alarm triggered pin */
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_SET);
 
+            /* Blink the display */
+            LCD_blink_start(&hlcd);
+
             state = STATE_ALARM_ON_HIGH;
             break;
 
@@ -239,6 +242,7 @@ int main(void) {
             break;
 
         case STATE_ALARM_STOP:
+            LCD_blink_stop(&hlcd);
             HAL_TIM_Base_MspDeInit(&htim2);
             /* Low on the alarm triggered pin */
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
