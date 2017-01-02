@@ -53,6 +53,8 @@ int main(void) {
     HAL_PWREx_EnableUltraLowPower();
     HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN1);
 
+    GPIO_InitTypeDef GPIO_InitStruct;
+
     while (1) {
 
         /**
@@ -208,6 +210,11 @@ int main(void) {
 
             alarm_pulse_timer = 0;
             /* High on the alarm triggered pin */
+            GPIO_InitStruct.Pin = GPIO_PIN_12;
+            GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+            GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+            GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+            HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
 
             /* Blink the display */
@@ -246,6 +253,11 @@ int main(void) {
             HAL_TIM_Base_MspDeInit(&htim2);
             /* Low on the alarm triggered pin */
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+            /* Put the pin back to analog mode, stops noise to the buzzer */
+            GPIO_InitStruct.Pin = GPIO_PIN_12;
+            GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+            GPIO_InitStruct.Pull = GPIO_NOPULL;
+            HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
             alarm_duration_timer = 0;
             state = STATE_OFF;
             break;
