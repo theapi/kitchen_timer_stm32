@@ -4900,7 +4900,7 @@ LOAD /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.
                 0x000005d4       0x1e /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtn.o
 OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
 
-.debug_line     0x00000000    0x10397
+.debug_line     0x00000000    0x10388
  .debug_line    0x00000000       0xb2 Drivers/CMSIS/Device/ST/STM32L0xx/Source/Templates/gcc/startup_stm32l053xx.o
  .debug_line    0x000000b2      0xa51 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.o
  .debug_line    0x00000b03      0xa0e Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_cortex.o
@@ -4917,18 +4917,18 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
  .debug_line    0x0000849a     0x1633 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim.o
  .debug_line    0x00009acd      0x8df Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim_ex.o
  .debug_line    0x0000a3ac      0x86a Src/eeprom.o
- .debug_line    0x0000ac16      0x8a6 Src/gpio.o
- .debug_line    0x0000b4bc      0x8d1 Src/lcd.o
- .debug_line    0x0000bd8d      0x8cc Src/lcd_dl1178.o
- .debug_line    0x0000c659      0x9c4 Src/main.o
- .debug_line    0x0000d01d      0x8a2 Src/rtc.o
- .debug_line    0x0000d8bf      0x85b Src/stm32l0xx_hal_msp.o
- .debug_line    0x0000e11a      0x8a8 Src/stm32l0xx_it.o
- .debug_line    0x0000e9c2      0x894 Src/system_clock_conf.o
- .debug_line    0x0000f256      0x889 Src/system_stm32l0xx.o
- .debug_line    0x0000fadf      0x8b8 Src/tim.o
+ .debug_line    0x0000ac16      0x897 Src/gpio.o
+ .debug_line    0x0000b4ad      0x8d1 Src/lcd.o
+ .debug_line    0x0000bd7e      0x8cc Src/lcd_dl1178.o
+ .debug_line    0x0000c64a      0x9c4 Src/main.o
+ .debug_line    0x0000d00e      0x8a2 Src/rtc.o
+ .debug_line    0x0000d8b0      0x85b Src/stm32l0xx_hal_msp.o
+ .debug_line    0x0000e10b      0x8a8 Src/stm32l0xx_it.o
+ .debug_line    0x0000e9b3      0x894 Src/system_clock_conf.o
+ .debug_line    0x0000f247      0x889 Src/system_stm32l0xx.o
+ .debug_line    0x0000fad0      0x8b8 Src/tim.o
 
-.debug_info     0x00000000     0xd934
+.debug_info     0x00000000     0xd937
  .debug_info    0x00000000       0xbd Drivers/CMSIS/Device/ST/STM32L0xx/Source/Templates/gcc/startup_stm32l053xx.o
  .debug_info    0x000000bd      0x73a Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.o
  .debug_info    0x000007f7      0x8d7 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_cortex.o
@@ -4945,16 +4945,16 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
  .debug_info    0x0000637f     0x2cd3 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim.o
  .debug_info    0x00009052      0x591 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim_ex.o
  .debug_info    0x000095e3      0x1b9 Src/eeprom.o
- .debug_info    0x0000979c      0x581 Src/gpio.o
- .debug_info    0x00009d1d      0x63b Src/lcd.o
- .debug_info    0x0000a358      0x3e9 Src/lcd_dl1178.o
- .debug_info    0x0000a741     0x10c2 Src/main.o
- .debug_info    0x0000b803      0x7b0 Src/rtc.o
- .debug_info    0x0000bfb3      0x30b Src/stm32l0xx_hal_msp.o
- .debug_info    0x0000c2be      0x415 Src/stm32l0xx_it.o
- .debug_info    0x0000c6d3      0x4d5 Src/system_clock_conf.o
- .debug_info    0x0000cba8      0x37b Src/system_stm32l0xx.o
- .debug_info    0x0000cf23      0xa11 Src/tim.o
+ .debug_info    0x0000979c      0x584 Src/gpio.o
+ .debug_info    0x00009d20      0x63b Src/lcd.o
+ .debug_info    0x0000a35b      0x3e9 Src/lcd_dl1178.o
+ .debug_info    0x0000a744     0x10c2 Src/main.o
+ .debug_info    0x0000b806      0x7b0 Src/rtc.o
+ .debug_info    0x0000bfb6      0x30b Src/stm32l0xx_hal_msp.o
+ .debug_info    0x0000c2c1      0x415 Src/stm32l0xx_it.o
+ .debug_info    0x0000c6d6      0x4d5 Src/system_clock_conf.o
+ .debug_info    0x0000cbab      0x37b Src/system_stm32l0xx.o
+ .debug_info    0x0000cf26      0xa11 Src/tim.o
 
 .debug_abbrev   0x00000000     0x2b4b
  .debug_abbrev  0x00000000       0x12 Drivers/CMSIS/Device/ST/STM32L0xx/Source/Templates/gcc/startup_stm32l053xx.o
@@ -5038,7 +5038,7 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
  .debug_aranges
                 0x00000b00       0x38 Src/tim.o
 
-.debug_ranges   0x00000000      0xeb8
+.debug_ranges   0x00000000      0xea0
  .debug_ranges  0x00000000       0x20 Drivers/CMSIS/Device/ST/STM32L0xx/Source/Templates/gcc/startup_stm32l053xx.o
  .debug_ranges  0x00000020       0xc8 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.o
  .debug_ranges  0x000000e8       0xf0 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_cortex.o
@@ -5055,16 +5055,16 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
  .debug_ranges  0x00000760      0x540 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim.o
  .debug_ranges  0x00000ca0       0x18 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim_ex.o
  .debug_ranges  0x00000cb8       0x18 Src/eeprom.o
- .debug_ranges  0x00000cd0       0xb0 Src/gpio.o
- .debug_ranges  0x00000d80       0x20 Src/lcd.o
- .debug_ranges  0x00000da0       0x28 Src/lcd_dl1178.o
- .debug_ranges  0x00000dc8       0x40 Src/main.o
- .debug_ranges  0x00000e08       0x20 Src/rtc.o
- .debug_ranges  0x00000e28       0x10 Src/stm32l0xx_hal_msp.o
- .debug_ranges  0x00000e38       0x30 Src/stm32l0xx_it.o
- .debug_ranges  0x00000e68       0x10 Src/system_clock_conf.o
- .debug_ranges  0x00000e78       0x18 Src/system_stm32l0xx.o
- .debug_ranges  0x00000e90       0x28 Src/tim.o
+ .debug_ranges  0x00000cd0       0x98 Src/gpio.o
+ .debug_ranges  0x00000d68       0x20 Src/lcd.o
+ .debug_ranges  0x00000d88       0x28 Src/lcd_dl1178.o
+ .debug_ranges  0x00000db0       0x40 Src/main.o
+ .debug_ranges  0x00000df0       0x20 Src/rtc.o
+ .debug_ranges  0x00000e10       0x10 Src/stm32l0xx_hal_msp.o
+ .debug_ranges  0x00000e20       0x30 Src/stm32l0xx_it.o
+ .debug_ranges  0x00000e50       0x10 Src/system_clock_conf.o
+ .debug_ranges  0x00000e60       0x18 Src/system_stm32l0xx.o
+ .debug_ranges  0x00000e78       0x28 Src/tim.o
 
 .debug_loc      0x00000000     0x744c
  .debug_loc     0x00000000       0xac Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.o

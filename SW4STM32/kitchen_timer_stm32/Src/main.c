@@ -208,7 +208,7 @@ int main(void) {
 
             alarm_pulse_timer = 0;
             /* High on the alarm triggered pin */
-            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
 
             /* Blink the display */
             LCD_blink_start(&hlcd);
@@ -245,7 +245,7 @@ int main(void) {
             LCD_blink_stop(&hlcd);
             HAL_TIM_Base_MspDeInit(&htim2);
             /* Low on the alarm triggered pin */
-            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
             alarm_duration_timer = 0;
             state = STATE_OFF;
             break;
