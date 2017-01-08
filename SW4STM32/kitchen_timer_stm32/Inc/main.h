@@ -9,9 +9,9 @@
 
 
 void Error_Handler(void);
-void increase_time(void);
-void decrease_time(void);
-void idle_timeout(void);
+void KT_IncreaseTime(void);
+void KT_DecreaseTime(void);
+void KT_IdleTimeout(void);
 
 enum main_states {
     STATE_INIT,

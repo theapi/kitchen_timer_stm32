@@ -13,8 +13,8 @@
 #include "main.h"
 #include "stdint.h"
 
-HAL_StatusTypeDef EEPROM_byte_write(uint32_t address, uint8_t data);
-uint8_t EEPROM_byte_read(uint32_t address);
+HAL_StatusTypeDef EEPROM_ByteWrite(uint32_t address, uint8_t data);
+uint8_t EEPROM_ByteRead(uint32_t address);
 
 
 #ifdef __cplusplus

@@ -1,9 +1,9 @@
 /**
- * DL1178 lcd screen found in generic large screen kitchen timers like this:
+ * LCD screen found in generic large screen kitchen timers like this:
  * https://www.amazon.co.uk/Mudder-Magnetic-Digital-Kitchen-Display/dp/B016EHCJFG
- * Datasheet is in the docs folder.
+ * Datasheet is in the docs folder as kìtchen timer XH6332.pdf.
  *
- * 3V, 1/4 Duty, 1/2 Bias
+ * 3V, 1/4 Duty
  *
  *
 
@@ -23,8 +23,8 @@
  *
  */
 
-#ifndef __lcd_dl1178_H
-#define __lcd_dl1178_H
+#ifndef __screen_H
+#define __screen_H
 #ifdef __cplusplus
  extern "C" {
 #endif
@@ -43,14 +43,13 @@
 #define LCD_SEG_8 0b00000000000000000000000010000000
 
 
-
-void LCD_display(LCD_HandleTypeDef *hlcd, uint8_t minutes, uint8_t seconds, uint8_t ampm);
-void LCD_blink_start(LCD_HandleTypeDef *hlcd);
-void LCD_blink_stop(LCD_HandleTypeDef *hlcd);
-void LCD_blank(LCD_HandleTypeDef *hlcd);
+void Screen_Update(LCD_HandleTypeDef *hlcd, uint8_t minutes, uint8_t seconds, uint8_t ampm);
+void Screen_BlinkStart(LCD_HandleTypeDef *hlcd);
+void Screen_BlinkStop(LCD_HandleTypeDef *hlcd);
+void Screen_Clear(LCD_HandleTypeDef *hlcd);
 
 #ifdef __cplusplus
 }
 #endif
-#endif /*__lcd_dl1178_H */
+#endif /*__screen_H */
 

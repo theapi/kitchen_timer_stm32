@@ -8,7 +8,7 @@
 /**
  * Write to the EEPROM (well flash actually, EEPROM is emulated in STM32).
  */
-HAL_StatusTypeDef EEPROM_byte_write(uint32_t address, uint8_t data) {
+HAL_StatusTypeDef EEPROM_ByteWrite(uint32_t address, uint8_t data) {
     HAL_StatusTypeDef  status;
     /* Data EEPROM address see reference manual 3.3.1 addresses: 0x0808 0000 - 0x0808 07FF */
     address = address + 0x08080000;
@@ -24,7 +24,7 @@ HAL_StatusTypeDef EEPROM_byte_write(uint32_t address, uint8_t data) {
 /**
  * Read a byte from an address in the "EEPROM"
  */
-uint8_t EEPROM_byte_read(uint32_t address) {
+uint8_t EEPROM_ByteRead(uint32_t address) {
     uint8_t tmp = 0;
     address = address + 0x08080000;
     tmp = *(__IO uint32_t*)address;

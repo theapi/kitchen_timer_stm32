@@ -19,8 +19,8 @@
 #include "gpio.h"
 #include "tim.h"
 #include "system_clock_conf.h"
-#include "lcd_dl1178.h"
 #include "eeprom.h"
+#include "screen.h"
 
 volatile enum main_states state = STATE_INIT;
 volatile enum button_states button_state = BUTT_NONE;
@@ -76,12 +76,12 @@ int main(void) {
                     button_down = HAL_GetTick();
                     /* Set this button's flag */
                     button_flag |= BUTTON_M;
-                    increase_time();
+                    KT_IncreaseTime();
                 }
                 else {
                     /* Check for long press, sleep is disabled during the button press. */
                     if ((HAL_GetTick() - button_down ) > LONG_PRESS) {
-                        increase_time();
+                        KT_IncreaseTime();
                         button_down = HAL_GetTick();
                     }
                 }
@@ -106,12 +106,12 @@ int main(void) {
                     button_down = HAL_GetTick();
                     /* Set this button's flag */
                     button_flag |= BUTTON_S;
-                    decrease_time();
+                    KT_DecreaseTime();
                 }
                 else {
                     /* Check for long press, sleep is disabled during the button press. */
                     if ((HAL_GetTick() - button_down ) > LONG_PRESS) {
-                        decrease_time();
+                        KT_DecreaseTime();
                         button_down = HAL_GetTick();
                     }
                 }
@@ -132,8 +132,8 @@ int main(void) {
                 /* Time setting mode || stopped so start pressed */
                 state = STATE_COUNTDOWN;
                 /* Store this value for retrieval after shutdown */
-                if (EEPROM_byte_read(EEPROM_ADDRESS) != minutes) {
-                   EEPROM_byte_write(EEPROM_ADDRESS, minutes);
+                if (EEPROM_ByteRead(EEPROM_ADDRESS) != minutes) {
+                   EEPROM_ByteWrite(EEPROM_ADDRESS, minutes);
                 }
             }
             else if (state == STATE_COUNTDOWN) {
@@ -158,7 +158,7 @@ int main(void) {
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
 
             HAL_RTC_MspInit(&hrtc);
-            minutes = EEPROM_byte_read(EEPROM_ADDRESS);
+            minutes = EEPROM_ByteRead(EEPROM_ADDRESS);
             seconds = 0;
             button_flag = 0;
             button_down = 0;
@@ -187,7 +187,7 @@ int main(void) {
         case STATE_SETUP:
             /* time setting mode */
             ampm = 1;
-            idle_timeout();
+            KT_IdleTimeout();
             break;
 
         case STATE_COUNTDOWN:
@@ -198,7 +198,7 @@ int main(void) {
         case STATE_STOPPED:
             /* stopped */
             ampm = 1;
-            idle_timeout();
+            KT_IdleTimeout();
             break;
 
         case STATE_ALARM_START:
@@ -218,7 +218,7 @@ int main(void) {
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
 
             /* Blink the display */
-            LCD_blink_start(&hlcd);
+            Screen_BlinkStart(&hlcd);
 
             state = STATE_ALARM_ON_HIGH;
             break;
@@ -249,7 +249,7 @@ int main(void) {
             break;
 
         case STATE_ALARM_STOP:
-            LCD_blink_stop(&hlcd);
+            Screen_BlinkStop(&hlcd);
             HAL_TIM_Base_MspDeInit(&htim2);
             /* Low on the alarm triggered pin */
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
@@ -263,7 +263,7 @@ int main(void) {
             break;
 
         default:
-            idle_timeout();
+            KT_IdleTimeout();
             break;
 
         }
@@ -271,7 +271,7 @@ int main(void) {
         if (update_display == 1) {
             update_display = 0;
             /* Update the screen */
-            LCD_display(&hlcd, minutes, seconds, ampm);
+            Screen_Update(&hlcd, minutes, seconds, ampm);
         }
 
         if (state != STATE_OFF && button_down == 0 && alarm_duration_timer == 0) {
@@ -305,7 +305,7 @@ int main(void) {
 /**
  * If nothing has happened for a while, turn off.
  */
-void idle_timeout() {
+void KT_IdleTimeout() {
     if (idle_time > MAX_IDLE_TIME) {
         state = STATE_OFF;
     }
@@ -314,7 +314,7 @@ void idle_timeout() {
 /**
  *  Increase the countdown time.
  */
-void increase_time() {
+void KT_IncreaseTime() {
     ++minutes;
     if (minutes > 99) {
         minutes = 0;
@@ -325,7 +325,7 @@ void increase_time() {
 /**
  *  Decrease the countdown time.
  */
-void decrease_time() {
+void KT_DecreaseTime() {
     if (minutes > 0) {
         --minutes;
     }
