@@ -21,19 +21,15 @@
 #include "system_clock_conf.h"
 #include "eeprom.h"
 #include "screen.h"
+#include "kt.h"
 
 volatile enum main_states state = STATE_INIT;
 volatile enum button_states button_state = BUTT_NONE;
 enum button_flags button_flag = 0;
-volatile uint8_t minutes = 0;
-volatile uint8_t seconds = 0;
-volatile uint8_t ampm = 1;
-volatile uint8_t update_display = 1;
-volatile uint32_t idle_time = 0x00U;
+
 volatile uint32_t button_down = 0x00U;
 volatile uint32_t alarm_duration_timer = 0x00U;
 volatile uint32_t alarm_pulse_timer = 0x00U;
-
 
 
 int main(void) {
@@ -132,8 +128,8 @@ int main(void) {
                 /* Time setting mode || stopped so start pressed */
                 state = STATE_COUNTDOWN;
                 /* Store this value for retrieval after shutdown */
-                if (EEPROM_ByteRead(EEPROM_ADDRESS) != minutes) {
-                   EEPROM_ByteWrite(EEPROM_ADDRESS, minutes);
+                if (EEPROM_ByteRead(EEPROM_ADDRESS) != kt.minutes) {
+                   EEPROM_ByteWrite(EEPROM_ADDRESS, kt.minutes);
                 }
             }
             else if (state == STATE_COUNTDOWN) {
@@ -144,7 +140,7 @@ int main(void) {
                 /* If alarm is on, stop it */
                 state = STATE_ALARM_STOP;
             }
-            update_display = 1;
+            kt.update = 1;
             button_state = BUTT_NONE;
             break;
         default:
@@ -158,22 +154,19 @@ int main(void) {
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
 
             HAL_RTC_MspInit(&hrtc);
-            minutes = EEPROM_ByteRead(EEPROM_ADDRESS);
-            seconds = 0;
+            KT_Init();
+            kt.minutes = EEPROM_ByteRead(EEPROM_ADDRESS);
             button_flag = 0;
             button_down = 0;
             button_state = BUTT_NONE;
             state = STATE_SETUP;
-            update_display = 1;
             break;
         case STATE_RESET:
-            minutes = 0;
-            seconds = 0;
+            KT_Init();
             button_flag = 0;
             button_down = 0;
             button_state = BUTT_NONE;
             state = STATE_SETUP;
-            update_display = 1;
             break;
         case STATE_OFF:
             /* Go into very low power mode */
@@ -186,24 +179,24 @@ int main(void) {
             break;
         case STATE_SETUP:
             /* time setting mode */
-            ampm = 1;
+            kt.ampm = 1;
             KT_IdleTimeout();
             break;
 
         case STATE_COUNTDOWN:
             /* counting down */
-            ampm = 0;
+            kt.ampm = 0;
             break;
 
         case STATE_STOPPED:
             /* stopped */
-            ampm = 1;
+            kt.ampm = 1;
             KT_IdleTimeout();
             break;
 
         case STATE_ALARM_START:
             /* start alarm sounding */
-            ampm = 1;
+            kt.ampm = 1;
             alarm_duration_timer = HAL_GetTick();
             /* 62 ms pulses of 2048Hz */
             HAL_TIM_Base_MspInit(&htim2);
@@ -268,11 +261,7 @@ int main(void) {
 
         }
 
-        if (update_display == 1) {
-            update_display = 0;
-            /* Update the screen */
-            Screen_Update(&hlcd, minutes, seconds, ampm);
-        }
+        Screen_Process(&hlcd, &kt);
 
         if (state != STATE_OFF && button_down == 0 && alarm_duration_timer == 0) {
             //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
@@ -303,45 +292,12 @@ int main(void) {
 }
 
 /**
- * If nothing has happened for a while, turn off.
- */
-void KT_IdleTimeout() {
-    if (idle_time > MAX_IDLE_TIME) {
-        state = STATE_OFF;
-    }
-}
-
-/**
- *  Increase the countdown time.
- */
-void KT_IncreaseTime() {
-    ++minutes;
-    if (minutes > 99) {
-        minutes = 0;
-    }
-    update_display = 1;
-}
-
-/**
- *  Decrease the countdown time.
- */
-void KT_DecreaseTime() {
-    if (minutes > 0) {
-        --minutes;
-    }
-    else {
-        minutes = 99;
-    }
-    update_display = 1;
-}
-
-/**
  * Callback for HAL_GPIO_EXTI_IRQHandler() in EXTI4_15_IRQHandler().
  *
  * Handles the interrupts which occur on button press.
  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-    idle_time = 0;
+    kt.idle_time = 0;
     if (HAL_GPIO_ReadPin(GPIOB, GPIO_Pin) == 0x01) {
         /* Rising edge, button pushed */
         if (GPIO_Pin == GPIO_PIN_4) {
@@ -368,30 +324,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
  * Callback for RTC_IRQHandler()
  */
 void HAL_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc) {
-    //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-    if (state == STATE_COUNTDOWN) {
-        idle_time = 0;
-        if (seconds > 0) {
-            --seconds;
-        }
-        else {
-            if (minutes == 0 && seconds == 0) {
-                /* Sound the alarm */
-                state = STATE_ALARM_START;
-            }
-            else {
-                seconds = 59;
-                if (minutes > 0) {
-                    --minutes;
-                }
-            }
-        }
-
-        update_display = 1;
-    }
-    else {
-        ++idle_time;
-    }
+    KT_RTCEx_WakeUpTimerEventCallback();
 }
 
 /**

@@ -9,9 +9,6 @@
 
 
 void Error_Handler(void);
-void KT_IncreaseTime(void);
-void KT_DecreaseTime(void);
-void KT_IdleTimeout(void);
 
 enum main_states {
     STATE_INIT,
@@ -44,7 +41,7 @@ enum button_flags {
 };
 
 #define LONG_PRESS 250U
-#define MAX_IDLE_TIME 120U
+#define MAX_IDLE_TIME 60U
 #define EEPROM_ADDRESS 0U
 #define ALARM_DURATION 23000U
 #define ALARM_PULSE 62U

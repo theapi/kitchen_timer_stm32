@@ -136,6 +136,17 @@ const uint32_t lcd_digits[4][11][4] = {
 };
 
 /**
+ * Do an update of the screen content if needed.
+ */
+void Screen_Process(LCD_HandleTypeDef *hlcd, KT_TypeDef *kt) {
+    if (kt->update == 1) {
+        kt->update = 0;
+        /* Update the screen */
+        Screen_Update(hlcd, kt->minutes, kt->seconds, kt->ampm);
+    }
+}
+
+/**
  * Show the minutes, seconds & M/S on the display.
  */
 void Screen_Update(LCD_HandleTypeDef *hlcd, uint8_t minutes, uint8_t seconds, uint8_t ampm) {
