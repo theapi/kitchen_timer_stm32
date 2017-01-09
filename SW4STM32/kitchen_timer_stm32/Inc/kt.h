@@ -13,10 +13,21 @@
 #include "main.h"
 #include "stdint.h"
 
-extern RTC_HandleTypeDef hrtc;
 
-//extern volatile enum main_states state;
+extern RTC_HandleTypeDef hrtc;
+extern TIM_HandleTypeDef htim2;
+extern LCD_HandleTypeDef hlcd;
+
+
 extern volatile enum button_states button_state;
+extern volatile uint32_t alarm_duration_timer;
+extern volatile uint32_t alarm_pulse_timer;
+
+enum button_flags {
+    BUTTON_M    = 1,
+    BUTTON_S    = 2,
+    BUTTON_STSP = 4,
+};
 
 /**
   * @brief KT

@@ -5,24 +5,7 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
-#include "stdint.h"
-
-
 void Error_Handler(void);
-/*
-enum main_states {
-    STATE_INIT,
-    STATE_RESET,
-    STATE_OFF,
-    STATE_SETUP,
-    STATE_COUNTDOWN,
-    STATE_STOPPED,
-    STATE_ALARM_START,
-    STATE_ALARM_ON_HIGH,
-    STATE_ALARM_ON_LOW,
-    STATE_ALARM_STOP,
-};
-*/
 
 enum button_states {
     BUTT_NONE,
@@ -35,17 +18,11 @@ enum button_states {
     BUTT_STSP_UP,
 };
 
-enum button_flags {
-    BUTTON_M    = 1,
-    BUTTON_S    = 2,
-    BUTTON_STSP = 4,
-};
-
-#define LONG_PRESS 250U
-#define MAX_IDLE_TIME 6U
+#define LONG_PRESS 250U       /* Milliseconds */
+#define MAX_IDLE_TIME 120U    /* Seconds */
 #define EEPROM_ADDRESS 0U
-#define ALARM_DURATION 23000U
-#define ALARM_PULSE 62U
+#define ALARM_DURATION 23000U /* Milliseconds */
+#define ALARM_PULSE 62U       /* Milliseconds */
 
 #endif /* __MAIN_H */
 

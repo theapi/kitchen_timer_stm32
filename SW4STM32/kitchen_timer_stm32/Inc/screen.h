@@ -31,7 +31,7 @@
 
 #include "stm32l0xx_hal.h"
 #include "main.h"
- #include "kt.h"
+#include "kt.h"
 
  /* NB these are numbered as they are in the lcd datasheet */
 #define LCD_SEG_1 0b00000000000000000000000000000001

@@ -5,6 +5,7 @@
 
 #include "kt.h"
 #include "eeprom.h"
+#include "screen.h"
 
 KT_TypeDef kt;
 volatile KT_StateTypeDef state;
@@ -106,7 +107,12 @@ KT_StateTypeDef KT_StateReset(KT_StateTypeDef state) {
 }
 
 KT_StateTypeDef KT_StateOff(KT_StateTypeDef state) {
-    return state;
+    HAL_RTC_MspDeInit(&hrtc);
+    __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
+    HAL_PWR_EnterSTANDBYMode();
+
+    /* Woke up via PWR_WAKEUP_PIN1 */
+    return KT_STATE_INIT;
 }
 
 KT_StateTypeDef KT_StateSetup(KT_StateTypeDef state) {
@@ -131,18 +137,64 @@ KT_StateTypeDef KT_StateStopped(KT_StateTypeDef state) {
 }
 
 KT_StateTypeDef KT_StateAlarmStart(KT_StateTypeDef state) {
-    return state;
+    kt.ampm = 1;
+    alarm_duration_timer = HAL_GetTick();
+    /* 62 ms pulses of 2048Hz */
+    HAL_TIM_Base_MspInit(&htim2);
+
+    alarm_pulse_timer = 0;
+    /* High on the alarm triggered pin */
+    GPIO_InitTypeDef GPIO_InitStruct;
+    GPIO_InitStruct.Pin = GPIO_PIN_12;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
+
+    /* Blink the display */
+    Screen_BlinkStart(&hlcd);
+
+    return KT_STATE_ALARM_ON_HIGH;
 }
 
 KT_StateTypeDef KT_StateAlarmOnHigh(KT_StateTypeDef state) {
+    if (alarm_pulse_timer == 0) {
+        alarm_pulse_timer = HAL_GetTick();
+        /* PB11 buzzing */
+        HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
+    }
+    else if ((HAL_GetTick() - alarm_pulse_timer ) > ALARM_PULSE) {
+        HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_4);
+        state = KT_STATE_ALARM_ON_LOW;
+    }
+
+    if ((HAL_GetTick() - alarm_duration_timer ) > ALARM_DURATION) {
+        state = KT_STATE_ALARM_STOP;
+    }
     return state;
 }
 
 KT_StateTypeDef KT_StateAlarmOnLow(KT_StateTypeDef state) {
+    if ((HAL_GetTick() - alarm_pulse_timer ) > ALARM_PULSE * 2) {
+        state = KT_STATE_ALARM_ON_HIGH;
+        alarm_pulse_timer = 0;
+    }
     return state;
 }
 
 KT_StateTypeDef KT_StateAlarmStop(KT_StateTypeDef state) {
-    return state;
+    Screen_BlinkStop(&hlcd);
+    HAL_TIM_Base_MspDeInit(&htim2);
+    /* Low on the alarm triggered pin */
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+    /* Put the pin back to analog mode, stops noise to the buzzer */
+    GPIO_InitTypeDef GPIO_InitStruct;
+    GPIO_InitStruct.Pin = GPIO_PIN_12;
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    alarm_duration_timer = 0;
+    return KT_STATE_OFF;
 }
 

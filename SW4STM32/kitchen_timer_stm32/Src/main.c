@@ -46,7 +46,6 @@ int main(void) {
     HAL_PWREx_EnableUltraLowPower();
     HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN1);
 
-    GPIO_InitTypeDef GPIO_InitStruct;
 
     while (1) {
 
@@ -154,12 +153,7 @@ int main(void) {
             break;
         case KT_STATE_OFF:
             /* Go into very low power mode */
-            HAL_RTC_MspDeInit(&hrtc);
-            __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
-            HAL_PWR_EnterSTANDBYMode();
-
-            /* Woke up via PWR_WAKEUP_PIN1 */
-            state = KT_STATE_INIT;
+            state = KT_StateOff(state);
             break;
         case KT_STATE_SETUP:
             /* time setting mode */
@@ -178,68 +172,24 @@ int main(void) {
 
         case KT_STATE_ALARM_START:
             /* start alarm sounding */
-            kt.ampm = 1;
-            alarm_duration_timer = HAL_GetTick();
-            /* 62 ms pulses of 2048Hz */
-            HAL_TIM_Base_MspInit(&htim2);
-
-            alarm_pulse_timer = 0;
-            /* High on the alarm triggered pin */
-            GPIO_InitStruct.Pin = GPIO_PIN_12;
-            GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-            GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-            GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-            HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
-
-            /* Blink the display */
-            Screen_BlinkStart(&hlcd);
-
-            state = KT_STATE_ALARM_ON_HIGH;
+            state = KT_StateAlarmStart(state);
             break;
 
         case KT_STATE_ALARM_ON_HIGH:
-
-            if (alarm_pulse_timer == 0) {
-                alarm_pulse_timer = HAL_GetTick();
-                /* PB11 buzzing */
-                HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
-            }
-            else if ((HAL_GetTick() - alarm_pulse_timer ) > ALARM_PULSE) {
-                HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_4);
-                state = KT_STATE_ALARM_ON_LOW;
-            }
-
-            if ((HAL_GetTick() - alarm_duration_timer ) > ALARM_DURATION) {
-                state = KT_STATE_ALARM_STOP;
-            }
+            state = KT_StateAlarmOnHigh(state);
             break;
 
         case KT_STATE_ALARM_ON_LOW:
-
-            if ((HAL_GetTick() - alarm_pulse_timer ) > ALARM_PULSE * 2) {
-                state = KT_STATE_ALARM_ON_HIGH;
-                alarm_pulse_timer = 0;
-            }
+            state = KT_StateAlarmOnLow(state);
             break;
 
         case KT_STATE_ALARM_STOP:
-            Screen_BlinkStop(&hlcd);
-            HAL_TIM_Base_MspDeInit(&htim2);
-            /* Low on the alarm triggered pin */
-            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-            /* Put the pin back to analog mode, stops noise to the buzzer */
-            GPIO_InitStruct.Pin = GPIO_PIN_12;
-            GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-            GPIO_InitStruct.Pull = GPIO_NOPULL;
-            HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-            alarm_duration_timer = 0;
-            state = KT_STATE_OFF;
+            state = KT_StateAlarmStop(state);
             break;
 
         default:
             if (KT_IdleTimeout()) {
-                return KT_STATE_OFF;
+                state = KT_STATE_OFF;
             }
             break;
 
