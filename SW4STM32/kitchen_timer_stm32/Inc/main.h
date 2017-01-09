@@ -9,7 +9,7 @@
 
 
 void Error_Handler(void);
-
+/*
 enum main_states {
     STATE_INIT,
     STATE_RESET,
@@ -22,6 +22,7 @@ enum main_states {
     STATE_ALARM_ON_LOW,
     STATE_ALARM_STOP,
 };
+*/
 
 enum button_states {
     BUTT_NONE,
@@ -41,7 +42,7 @@ enum button_flags {
 };
 
 #define LONG_PRESS 250U
-#define MAX_IDLE_TIME 60U
+#define MAX_IDLE_TIME 6U
 #define EEPROM_ADDRESS 0U
 #define ALARM_DURATION 23000U
 #define ALARM_PULSE 62U

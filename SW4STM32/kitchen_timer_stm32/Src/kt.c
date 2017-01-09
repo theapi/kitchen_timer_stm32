@@ -7,6 +7,7 @@
 #include "eeprom.h"
 
 KT_TypeDef kt;
+KT_StateTypeDef state;
 
 void KT_Init() {
     kt.minutes = 0;
@@ -14,6 +15,8 @@ void KT_Init() {
     kt.ampm = 1;
     kt.update = 1;
     kt.idle_time = 0;
+    kt.button_flag = 0;
+    kt.button_down = 0;
 }
 
 /**
@@ -45,7 +48,7 @@ void KT_DecreaseTime() {
  */
 void KT_IdleTimeout(void) {
     if (kt.idle_time > MAX_IDLE_TIME) {
-        state = STATE_OFF;
+        state = KT_STATE_OFF;
     }
 }
 
@@ -54,7 +57,7 @@ void KT_IdleTimeout(void) {
  */
 void KT_RTCEx_WakeUpTimerEventCallback() {
     //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-    if (state == STATE_COUNTDOWN) {
+    if (state == KT_STATE_COUNTDOWN) {
         kt.idle_time = 0;
         if (kt.seconds > 0) {
             --kt.seconds;
@@ -62,7 +65,7 @@ void KT_RTCEx_WakeUpTimerEventCallback() {
         else {
             if (kt.minutes == 0 && kt.seconds == 0) {
                 /* Sound the alarm */
-                state = STATE_ALARM_START;
+                state = KT_STATE_ALARM_START;
             }
             else {
                 kt.seconds = 59;
@@ -84,18 +87,21 @@ void KT_RTCEx_WakeUpTimerEventCallback() {
 KT_StateTypeDef KT_StateInit(KT_StateTypeDef state) {
     /* Low on the alarm triggered pin */
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
-
+    /* Start the RTC */
     HAL_RTC_MspInit(&hrtc);
+    /* Initialise the kitchen timer structure */
     KT_Init();
+    /* Use the stored minutes */
     kt.minutes = EEPROM_ByteRead(EEPROM_ADDRESS);
-    button_flag = 0;
-    button_down = 0;
+
     button_state = BUTT_NONE;
     return KT_STATE_SETUP;
 }
 
 KT_StateTypeDef KT_StateReset(KT_StateTypeDef state) {
-    return state;
+    KT_Init();
+    button_state = BUTT_NONE;
+    return KT_STATE_SETUP;
 }
 
 KT_StateTypeDef KT_StateOff(KT_StateTypeDef state) {
@@ -103,11 +109,14 @@ KT_StateTypeDef KT_StateOff(KT_StateTypeDef state) {
 }
 
 KT_StateTypeDef KT_StateSetup(KT_StateTypeDef state) {
-    return state;
+    kt.ampm = 1;
+    //KT_IdleTimeout(); // this doesn't time out
+    return KT_STATE_SETUP;
 }
 
 KT_StateTypeDef KT_StateCountdown(KT_StateTypeDef state) {
-    return state;
+    kt.ampm = 0;
+    return KT_STATE_COUNTDOWN;
 }
 
 KT_StateTypeDef KT_StateStopped(KT_StateTypeDef state) {

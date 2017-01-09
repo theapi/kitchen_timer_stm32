@@ -14,7 +14,9 @@
 #include "stdint.h"
 
 extern RTC_HandleTypeDef hrtc;
-extern volatile enum main_states state;
+
+//extern volatile enum main_states state;
+extern volatile enum button_states button_state;
 
 /**
   * @brief KT
@@ -26,6 +28,8 @@ typedef struct
     uint8_t ampm;
     uint8_t update;
     uint32_t idle_time;
+    uint32_t button_down;
+    enum button_flags button_flag;
 } KT_TypeDef;
 
 extern KT_TypeDef kt;
@@ -42,6 +46,7 @@ typedef enum {
     KT_STATE_ALARM_ON_LOW,
     KT_STATE_ALARM_STOP,
 } KT_StateTypeDef;
+extern KT_StateTypeDef state;
 
 void KT_Init();
 void KT_IncreaseTime(void);

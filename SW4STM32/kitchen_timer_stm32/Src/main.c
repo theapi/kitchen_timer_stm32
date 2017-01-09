@@ -23,11 +23,8 @@
 #include "screen.h"
 #include "kt.h"
 
-volatile enum main_states state = STATE_INIT;
 volatile enum button_states button_state = BUTT_NONE;
-enum button_flags button_flag = 0;
 
-volatile uint32_t button_down = 0x00U;
 volatile uint32_t alarm_duration_timer = 0x00U;
 volatile uint32_t alarm_pulse_timer = 0x00U;
 
@@ -61,84 +58,84 @@ int main(void) {
         switch (button_state) {
         case BUTT_M_DOWN:
             /* Check for Both M & S being pressed */
-            if (button_flag & BUTTON_S) {
+            if (kt.button_flag & BUTTON_S) {
                 button_state = BUTT_MS;
-                button_down = 1; /* prevent sleep so next state happens quickly */
+                kt.button_down = 1; /* prevent sleep so next state happens quickly */
             }
             else {
                 /* Update time once per press */
-                if (!(button_flag & BUTTON_M)) {
+                if (!(kt.button_flag & BUTTON_M)) {
                     /* Start a timer to see if it's a long press */
-                    button_down = HAL_GetTick();
+                    kt.button_down = HAL_GetTick();
                     /* Set this button's flag */
-                    button_flag |= BUTTON_M;
+                    kt.button_flag |= BUTTON_M;
                     KT_IncreaseTime();
                 }
                 else {
                     /* Check for long press, sleep is disabled during the button press. */
-                    if ((HAL_GetTick() - button_down ) > LONG_PRESS) {
+                    if ((HAL_GetTick() - kt.button_down ) > LONG_PRESS) {
                         KT_IncreaseTime();
-                        button_down = HAL_GetTick();
+                        kt.button_down = HAL_GetTick();
                     }
                 }
             }
             break;
         case BUTT_M_UP:
             /* Unset this button's flag */
-            button_flag &= ~(BUTTON_M);
+            kt.button_flag &= ~(BUTTON_M);
             /* Reset the button timer */
-            button_down = 0x00U;
+            kt.button_down = 0x00U;
             break;
         case BUTT_S_DOWN:
             /* Check for Both M & S being pressed */
-            if (button_flag & BUTTON_M) {
+            if (kt.button_flag & BUTTON_M) {
                 button_state = BUTT_MS;
-                button_down = 1; /* prevent sleep so next state happens quickly */
+                kt.button_down = 1; /* prevent sleep so next state happens quickly */
             }
             else {
                 /* Update time once per press */
-                if (!(button_flag & BUTTON_S)) {
+                if (!(kt.button_flag & BUTTON_S)) {
                     /* Start a timer to see if it's a long press */
-                    button_down = HAL_GetTick();
+                    kt.button_down = HAL_GetTick();
                     /* Set this button's flag */
-                    button_flag |= BUTTON_S;
+                    kt.button_flag |= BUTTON_S;
                     KT_DecreaseTime();
                 }
                 else {
                     /* Check for long press, sleep is disabled during the button press. */
-                    if ((HAL_GetTick() - button_down ) > LONG_PRESS) {
+                    if ((HAL_GetTick() - kt.button_down ) > LONG_PRESS) {
                         KT_DecreaseTime();
-                        button_down = HAL_GetTick();
+                        kt.button_down = HAL_GetTick();
                     }
                 }
             }
             break;
         case BUTT_S_UP:
             /* Unset this button's flag */
-            button_flag &= ~(BUTTON_S);
+            kt.button_flag &= ~(BUTTON_S);
             /* Reset the button timer */
-            button_down = 0x00U;
+            kt.button_down = 0x00U;
             break;
         case BUTT_MS:
             /* Reset time */
-            state = STATE_RESET;
+            state = KT_STATE_RESET;
             break;
         case BUTT_STSP_DOWN:
-            if (state == STATE_SETUP || state == STATE_STOPPED) {
+            if (state == KT_STATE_SETUP || state == KT_STATE_STOPPED) {
                 /* Time setting mode || stopped so start pressed */
-                state = STATE_COUNTDOWN;
+                state = KT_STATE_COUNTDOWN;
                 /* Store this value for retrieval after shutdown */
                 if (EEPROM_ByteRead(EEPROM_ADDRESS) != kt.minutes) {
                    EEPROM_ByteWrite(EEPROM_ADDRESS, kt.minutes);
                 }
             }
-            else if (state == STATE_COUNTDOWN) {
+            else if (state == KT_STATE_COUNTDOWN) {
                 /* Counting down so stop pressed */
-                state = STATE_STOPPED;
+                state = KT_STATE_STOPPED;
             }
             else if (alarm_duration_timer > 0) {
                 /* If alarm is on, stop it */
-                state = STATE_ALARM_STOP;
+                state = KT_STATE_ALARM_STOP;
             }
             kt.update = 1;
             button_state = BUTT_NONE;
@@ -147,54 +144,41 @@ int main(void) {
             break;
         }
 
-        /* Main state machine */
+         /* Main kitchen timer state machine */
         switch (state) {
-        case STATE_INIT:
-            /* Low on the alarm triggered pin */
-            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
-
-            HAL_RTC_MspInit(&hrtc);
-            KT_Init();
-            kt.minutes = EEPROM_ByteRead(EEPROM_ADDRESS);
-            button_flag = 0;
-            button_down = 0;
-            button_state = BUTT_NONE;
-            state = STATE_SETUP;
+        case KT_STATE_INIT:
+            state = KT_StateInit(state);
             break;
-        case STATE_RESET:
-            KT_Init();
-            button_flag = 0;
-            button_down = 0;
-            button_state = BUTT_NONE;
-            state = STATE_SETUP;
+        case KT_STATE_RESET:
+            state = KT_StateReset(state);
             break;
-        case STATE_OFF:
+        case KT_STATE_OFF:
             /* Go into very low power mode */
             HAL_RTC_MspDeInit(&hrtc);
             __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
             HAL_PWR_EnterSTANDBYMode();
 
             /* Woke up via PWR_WAKEUP_PIN1 */
-            state = STATE_INIT;
+            state = KT_STATE_INIT;
             break;
-        case STATE_SETUP:
+        case KT_STATE_SETUP:
             /* time setting mode */
-            kt.ampm = 1;
+            state = KT_StateSetup(state);
             KT_IdleTimeout();
             break;
 
-        case STATE_COUNTDOWN:
+        case KT_STATE_COUNTDOWN:
             /* counting down */
-            kt.ampm = 0;
+            state = KT_StateCountdown(state);
             break;
 
-        case STATE_STOPPED:
+        case KT_STATE_STOPPED:
             /* stopped */
             kt.ampm = 1;
             KT_IdleTimeout();
             break;
 
-        case STATE_ALARM_START:
+        case KT_STATE_ALARM_START:
             /* start alarm sounding */
             kt.ampm = 1;
             alarm_duration_timer = HAL_GetTick();
@@ -213,10 +197,10 @@ int main(void) {
             /* Blink the display */
             Screen_BlinkStart(&hlcd);
 
-            state = STATE_ALARM_ON_HIGH;
+            state = KT_STATE_ALARM_ON_HIGH;
             break;
 
-        case STATE_ALARM_ON_HIGH:
+        case KT_STATE_ALARM_ON_HIGH:
 
             if (alarm_pulse_timer == 0) {
                 alarm_pulse_timer = HAL_GetTick();
@@ -225,23 +209,23 @@ int main(void) {
             }
             else if ((HAL_GetTick() - alarm_pulse_timer ) > ALARM_PULSE) {
                 HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_4);
-                state = STATE_ALARM_ON_LOW;
+                state = KT_STATE_ALARM_ON_LOW;
             }
 
             if ((HAL_GetTick() - alarm_duration_timer ) > ALARM_DURATION) {
-                state = STATE_ALARM_STOP;
+                state = KT_STATE_ALARM_STOP;
             }
             break;
 
-        case STATE_ALARM_ON_LOW:
+        case KT_STATE_ALARM_ON_LOW:
 
             if ((HAL_GetTick() - alarm_pulse_timer ) > ALARM_PULSE * 2) {
-                state = STATE_ALARM_ON_HIGH;
+                state = KT_STATE_ALARM_ON_HIGH;
                 alarm_pulse_timer = 0;
             }
             break;
 
-        case STATE_ALARM_STOP:
+        case KT_STATE_ALARM_STOP:
             Screen_BlinkStop(&hlcd);
             HAL_TIM_Base_MspDeInit(&htim2);
             /* Low on the alarm triggered pin */
@@ -252,7 +236,7 @@ int main(void) {
             GPIO_InitStruct.Pull = GPIO_NOPULL;
             HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
             alarm_duration_timer = 0;
-            state = STATE_OFF;
+            state = KT_STATE_OFF;
             break;
 
         default:
@@ -263,7 +247,7 @@ int main(void) {
 
         Screen_Process(&hlcd, &kt);
 
-        if (state != STATE_OFF && button_down == 0 && alarm_duration_timer == 0) {
+        if (state != KT_STATE_OFF && (kt.button_down == 0) && (alarm_duration_timer == 0)) {
             //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 
             /* Disable the systick interrupt to not wake up every millisecond */
