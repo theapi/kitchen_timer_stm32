@@ -164,7 +164,6 @@ int main(void) {
         case KT_STATE_SETUP:
             /* time setting mode */
             state = KT_StateSetup(state);
-            KT_IdleTimeout();
             break;
 
         case KT_STATE_COUNTDOWN:
@@ -174,8 +173,7 @@ int main(void) {
 
         case KT_STATE_STOPPED:
             /* stopped */
-            kt.ampm = 1;
-            KT_IdleTimeout();
+            state = KT_StateStopped(state);
             break;
 
         case KT_STATE_ALARM_START:
@@ -240,7 +238,9 @@ int main(void) {
             break;
 
         default:
-            KT_IdleTimeout();
+            if (KT_IdleTimeout()) {
+                return KT_STATE_OFF;
+            }
             break;
 
         }

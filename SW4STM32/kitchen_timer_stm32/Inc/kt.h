@@ -31,7 +31,6 @@ typedef struct
     uint32_t button_down;
     enum button_flags button_flag;
 } KT_TypeDef;
-
 extern KT_TypeDef kt;
 
 typedef enum {
@@ -46,13 +45,12 @@ typedef enum {
     KT_STATE_ALARM_ON_LOW,
     KT_STATE_ALARM_STOP,
 } KT_StateTypeDef;
-extern KT_StateTypeDef state;
+volatile extern KT_StateTypeDef state;
 
 void KT_Init();
 void KT_IncreaseTime(void);
 void KT_DecreaseTime(void);
-void KT_IdleTimeout(void);
-void KT_IdleTimeout(void);
+uint8_t KT_IdleTimeout(void);
 void KT_RTCEx_WakeUpTimerEventCallback(void);
 
 /* State functions */

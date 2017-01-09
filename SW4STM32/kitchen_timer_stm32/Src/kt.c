@@ -7,7 +7,7 @@
 #include "eeprom.h"
 
 KT_TypeDef kt;
-KT_StateTypeDef state;
+volatile KT_StateTypeDef state;
 
 void KT_Init() {
     kt.minutes = 0;
@@ -46,10 +46,11 @@ void KT_DecreaseTime() {
 /**
  * If nothing has happened for a while, turn off.
  */
-void KT_IdleTimeout(void) {
+uint8_t KT_IdleTimeout(void) {
     if (kt.idle_time > MAX_IDLE_TIME) {
-        state = KT_STATE_OFF;
+        return 1;
     }
+    return 0;
 }
 
 /**
@@ -110,7 +111,9 @@ KT_StateTypeDef KT_StateOff(KT_StateTypeDef state) {
 
 KT_StateTypeDef KT_StateSetup(KT_StateTypeDef state) {
     kt.ampm = 1;
-    //KT_IdleTimeout(); // this doesn't time out
+    if (KT_IdleTimeout()) {
+        return KT_STATE_OFF;
+    }
     return KT_STATE_SETUP;
 }
 
@@ -120,7 +123,11 @@ KT_StateTypeDef KT_StateCountdown(KT_StateTypeDef state) {
 }
 
 KT_StateTypeDef KT_StateStopped(KT_StateTypeDef state) {
-    return state;
+    kt.ampm = 1;
+    if (KT_IdleTimeout()) {
+        return KT_STATE_OFF;
+    }
+    return KT_STATE_STOPPED;
 }
 
 KT_StateTypeDef KT_StateAlarmStart(KT_StateTypeDef state) {
