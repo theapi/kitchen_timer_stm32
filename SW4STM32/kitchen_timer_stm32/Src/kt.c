@@ -4,6 +4,7 @@
  */
 
 #include "kt.h"
+#include "eeprom.h"
 
 KT_TypeDef kt;
 
@@ -76,3 +77,56 @@ void KT_RTCEx_WakeUpTimerEventCallback() {
         ++kt.idle_time;
     }
 }
+
+/**
+ * Initial state.
+ */
+KT_StateTypeDef KT_StateInit(KT_StateTypeDef state) {
+    /* Low on the alarm triggered pin */
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
+
+    HAL_RTC_MspInit(&hrtc);
+    KT_Init();
+    kt.minutes = EEPROM_ByteRead(EEPROM_ADDRESS);
+    button_flag = 0;
+    button_down = 0;
+    button_state = BUTT_NONE;
+    return KT_STATE_SETUP;
+}
+
+KT_StateTypeDef KT_StateReset(KT_StateTypeDef state) {
+    return state;
+}
+
+KT_StateTypeDef KT_StateOff(KT_StateTypeDef state) {
+    return state;
+}
+
+KT_StateTypeDef KT_StateSetup(KT_StateTypeDef state) {
+    return state;
+}
+
+KT_StateTypeDef KT_StateCountdown(KT_StateTypeDef state) {
+    return state;
+}
+
+KT_StateTypeDef KT_StateStopped(KT_StateTypeDef state) {
+    return state;
+}
+
+KT_StateTypeDef KT_StateAlarmStart(KT_StateTypeDef state) {
+    return state;
+}
+
+KT_StateTypeDef KT_StateAlarmOnHigh(KT_StateTypeDef state) {
+    return state;
+}
+
+KT_StateTypeDef KT_StateAlarmOnLow(KT_StateTypeDef state) {
+    return state;
+}
+
+KT_StateTypeDef KT_StateAlarmStop(KT_StateTypeDef state) {
+    return state;
+}
+
