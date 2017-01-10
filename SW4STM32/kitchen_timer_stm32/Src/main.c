@@ -22,8 +22,8 @@
 #include "eeprom.h"
 #include "screen.h"
 #include "kt.h"
+#include "button.h"
 
-volatile enum button_states button_state = BUTT_NONE;
 
 volatile uint32_t alarm_duration_timer = 0x00U;
 volatile uint32_t alarm_pulse_timer = 0x00U;
@@ -49,108 +49,17 @@ int main(void) {
 
     while (1) {
 
-        /**
-         * Handle the buttons.
-         *
-         * Buttons are read as interrupts so the system can sleep most of the time.
-         */
-        switch (button_state) {
-        case BUTT_M_DOWN:
-            /* Check for Both M & S being pressed */
-            if (kt.button_flag & BUTTON_S) {
-                button_state = BUTT_MS;
-                kt.button_down = 1; /* prevent sleep so next state happens quickly */
-            }
-            else {
-                /* Update time once per press */
-                if (!(kt.button_flag & BUTTON_M)) {
-                    /* Start a timer to see if it's a long press */
-                    kt.button_down = HAL_GetTick();
-                    /* Set this button's flag */
-                    kt.button_flag |= BUTTON_M;
-                    KT_IncreaseTime();
-                }
-                else {
-                    /* Check for long press, sleep is disabled during the button press. */
-                    if ((HAL_GetTick() - kt.button_down ) > LONG_PRESS) {
-                        KT_IncreaseTime();
-                        kt.button_down = HAL_GetTick();
-                    }
-                }
-            }
-            break;
-        case BUTT_M_UP:
-            /* Unset this button's flag */
-            kt.button_flag &= ~(BUTTON_M);
-            /* Reset the button timer */
-            kt.button_down = 0x00U;
-            break;
-        case BUTT_S_DOWN:
-            /* Check for Both M & S being pressed */
-            if (kt.button_flag & BUTTON_M) {
-                button_state = BUTT_MS;
-                kt.button_down = 1; /* prevent sleep so next state happens quickly */
-            }
-            else {
-                /* Update time once per press */
-                if (!(kt.button_flag & BUTTON_S)) {
-                    /* Start a timer to see if it's a long press */
-                    kt.button_down = HAL_GetTick();
-                    /* Set this button's flag */
-                    kt.button_flag |= BUTTON_S;
-                    KT_DecreaseTime();
-                }
-                else {
-                    /* Check for long press, sleep is disabled during the button press. */
-                    if ((HAL_GetTick() - kt.button_down ) > LONG_PRESS) {
-                        KT_DecreaseTime();
-                        kt.button_down = HAL_GetTick();
-                    }
-                }
-            }
-            break;
-        case BUTT_S_UP:
-            /* Unset this button's flag */
-            kt.button_flag &= ~(BUTTON_S);
-            /* Reset the button timer */
-            kt.button_down = 0x00U;
-            break;
-        case BUTT_MS:
-            /* Reset time */
-            kt.state = KT_STATE_RESET;
-            break;
-        case BUTT_STSP_DOWN:
-            if (kt.state == KT_STATE_SETUP || kt.state == KT_STATE_STOPPED) {
-                /* Time setting mode || stopped so start pressed */
-                kt.state = KT_STATE_COUNTDOWN;
-                /* Store this value for retrieval after shutdown */
-                if (EEPROM_ByteRead(EEPROM_ADDRESS) != kt.minutes) {
-                   EEPROM_ByteWrite(EEPROM_ADDRESS, kt.minutes);
-                }
-            }
-            else if (kt.state == KT_STATE_COUNTDOWN) {
-                /* Counting down so stop pressed */
-                kt.state = KT_STATE_STOPPED;
-            }
-            else if (alarm_duration_timer > 0) {
-                /* If alarm is on, stop it */
-                kt.state = KT_STATE_ALARM_STOP;
-            }
-            kt.update = 1;
-            button_state = BUTT_NONE;
-            break;
-        default:
-            break;
-        }
+        /* Handle the buttons. */
+        Button_StateMachineRun();
 
-         /* Main kitchen timer state machine */
+        /* Main kitchen timer state machine */
         KT_StateMachineRun();
 
         Screen_Process(&hlcd, &kt);
 
         ///@todo check for & handle a button interrupt before sleeping
 
-        if (kt.state != KT_STATE_OFF && (kt.button_down == 0) && (alarm_duration_timer == 0)) {
+        if (kt.state != KT_STATE_OFF && (button.down == 0) && (alarm_duration_timer == 0)) {
             //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 
             /* Disable the systick interrupt to not wake up every millisecond */
@@ -184,27 +93,7 @@ int main(void) {
  * Handles the interrupts which occur on button press.
  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-    kt.idle_time = 0;
-    if (HAL_GPIO_ReadPin(GPIOB, GPIO_Pin) == 0x01) {
-        /* Rising edge, button pushed */
-        if (GPIO_Pin == GPIO_PIN_4) {
-            button_state = BUTT_M_DOWN;
-        } else if (GPIO_Pin == GPIO_PIN_5) {
-            button_state = BUTT_S_DOWN;
-        } else if (GPIO_Pin == GPIO_PIN_6) {
-            button_state = BUTT_STSP_DOWN;
-        }
-    }
-    else {
-        /* Falling edge, button released */
-        if (GPIO_Pin == GPIO_PIN_4) {
-            button_state = BUTT_M_UP;
-        } else if (GPIO_Pin == GPIO_PIN_5) {
-            button_state = BUTT_S_UP;
-        } else if (GPIO_Pin == GPIO_PIN_6) {
-            button_state = BUTT_STSP_UP;
-        }
-    }
+    Button_IRQHandler(GPIO_Pin);
 }
 
 /**

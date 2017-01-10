@@ -12,22 +12,23 @@
 #include "stm32l0xx_hal.h"
 #include "main.h"
 #include "stdint.h"
-
+#include "button.h"
 
 extern RTC_HandleTypeDef hrtc;
 extern TIM_HandleTypeDef htim2;
 extern LCD_HandleTypeDef hlcd;
+extern Button_TypeDef button;
 
-
-extern volatile enum button_states button_state;
 extern volatile uint32_t alarm_duration_timer;
 extern volatile uint32_t alarm_pulse_timer;
 
+/*
 enum button_flags {
     BUTTON_M    = 1,
     BUTTON_S    = 2,
     BUTTON_STSP = 4,
 };
+*/
 
 typedef enum {
     KT_STATE_INIT,
@@ -52,15 +53,15 @@ typedef struct
     uint8_t ampm;
     uint8_t update;
     uint32_t idle_time;
-    uint32_t button_down;
-    enum button_flags button_flag;
+//    uint32_t button_down;
+//    enum button_flags button_flag;
     KT_StateTypeDef state;
 } KT_TypeDef;
 extern KT_TypeDef kt;
 
 
 
-void KT_Init();
+void KT_Init(void);
 void KT_IncreaseTime(void);
 void KT_DecreaseTime(void);
 uint8_t KT_IdleTimeout(void);

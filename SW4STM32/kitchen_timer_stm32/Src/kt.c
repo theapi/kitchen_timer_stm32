@@ -4,6 +4,7 @@
  */
 
 #include "kt.h"
+#include "button.h"
 #include "eeprom.h"
 #include "screen.h"
 
@@ -15,8 +16,6 @@ void KT_Init() {
     kt.ampm = 1;
     kt.update = 1;
     kt.idle_time = 0;
-    kt.button_flag = 0;
-    kt.button_down = 0;
     kt.state = KT_STATE_INIT;
 }
 
@@ -96,13 +95,13 @@ KT_StateTypeDef KT_StateInit(KT_StateTypeDef state) {
     /* Use the stored minutes */
     kt.minutes = EEPROM_ByteRead(EEPROM_ADDRESS);
 
-    button_state = BUTT_NONE;
+    button.state = BUTT_NONE;
     return KT_STATE_SETUP;
 }
 
 KT_StateTypeDef KT_StateReset(KT_StateTypeDef state) {
     KT_Init();
-    button_state = BUTT_NONE;
+    button.state = BUTT_NONE;
     return KT_STATE_SETUP;
 }
 
