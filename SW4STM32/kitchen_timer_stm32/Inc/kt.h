@@ -66,6 +66,7 @@ void KT_DecreaseTime(void);
 uint8_t KT_IdleTimeout(void);
 void KT_RTCEx_WakeUpTimerEventCallback(void);
 
+void KT_StateMachineRun(void);
 /* State functions */
 KT_StateTypeDef KT_StateInit(KT_StateTypeDef state);
 KT_StateTypeDef KT_StateReset(KT_StateTypeDef state);

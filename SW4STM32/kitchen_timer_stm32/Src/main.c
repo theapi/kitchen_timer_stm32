@@ -144,56 +144,7 @@ int main(void) {
         }
 
          /* Main kitchen timer state machine */
-        switch (kt.state) {
-        case KT_STATE_INIT:
-            kt.state = KT_StateInit(kt.state);
-            break;
-        case KT_STATE_RESET:
-            kt.state = KT_StateReset(kt.state);
-            break;
-        case KT_STATE_OFF:
-            /* Go into very low power mode */
-            kt.state = KT_StateOff(kt.state);
-            break;
-        case KT_STATE_SETUP:
-            /* time setting mode */
-            kt.state = KT_StateSetup(kt.state);
-            break;
-
-        case KT_STATE_COUNTDOWN:
-            /* counting down */
-            kt.state = KT_StateCountdown(kt.state);
-            break;
-
-        case KT_STATE_STOPPED:
-            /* stopped */
-            kt.state = KT_StateStopped(kt.state);
-            break;
-
-        case KT_STATE_ALARM_START:
-            /* start alarm sounding */
-            kt.state = KT_StateAlarmStart(kt.state);
-            break;
-
-        case KT_STATE_ALARM_ON_HIGH:
-            kt.state = KT_StateAlarmOnHigh(kt.state);
-            break;
-
-        case KT_STATE_ALARM_ON_LOW:
-            kt.state = KT_StateAlarmOnLow(kt.state);
-            break;
-
-        case KT_STATE_ALARM_STOP:
-            kt.state = KT_StateAlarmStop(kt.state);
-            break;
-
-        default:
-            if (KT_IdleTimeout()) {
-                kt.state = KT_STATE_OFF;
-            }
-            break;
-
-        }
+        KT_StateMachineRun();
 
         Screen_Process(&hlcd, &kt);
 
