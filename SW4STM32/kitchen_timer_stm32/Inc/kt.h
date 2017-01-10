@@ -29,21 +29,6 @@ enum button_flags {
     BUTTON_STSP = 4,
 };
 
-/**
-  * @brief KT
-  */
-typedef struct
-{
-    uint8_t minutes;
-    uint8_t seconds;
-    uint8_t ampm;
-    uint8_t update;
-    uint32_t idle_time;
-    uint32_t button_down;
-    enum button_flags button_flag;
-} KT_TypeDef;
-extern KT_TypeDef kt;
-
 typedef enum {
     KT_STATE_INIT,
     KT_STATE_RESET,
@@ -56,7 +41,24 @@ typedef enum {
     KT_STATE_ALARM_ON_LOW,
     KT_STATE_ALARM_STOP,
 } KT_StateTypeDef;
-volatile extern KT_StateTypeDef state;
+
+/**
+  * @brief KT
+  */
+typedef struct
+{
+    uint8_t minutes;
+    uint8_t seconds;
+    uint8_t ampm;
+    uint8_t update;
+    uint32_t idle_time;
+    uint32_t button_down;
+    enum button_flags button_flag;
+    KT_StateTypeDef state;
+} KT_TypeDef;
+extern KT_TypeDef kt;
+
+
 
 void KT_Init();
 void KT_IncreaseTime(void);

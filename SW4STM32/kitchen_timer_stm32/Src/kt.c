@@ -8,7 +8,6 @@
 #include "screen.h"
 
 KT_TypeDef kt;
-volatile KT_StateTypeDef state;
 
 void KT_Init() {
     kt.minutes = 0;
@@ -18,6 +17,7 @@ void KT_Init() {
     kt.idle_time = 0;
     kt.button_flag = 0;
     kt.button_down = 0;
+    kt.state = KT_STATE_INIT;
 }
 
 /**
@@ -59,7 +59,7 @@ uint8_t KT_IdleTimeout(void) {
  */
 void KT_RTCEx_WakeUpTimerEventCallback() {
     //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-    if (state == KT_STATE_COUNTDOWN) {
+    if (kt.state == KT_STATE_COUNTDOWN) {
         kt.idle_time = 0;
         if (kt.seconds > 0) {
             --kt.seconds;
@@ -67,7 +67,7 @@ void KT_RTCEx_WakeUpTimerEventCallback() {
         else {
             if (kt.minutes == 0 && kt.seconds == 0) {
                 /* Sound the alarm */
-                state = KT_STATE_ALARM_START;
+                kt.state = KT_STATE_ALARM_START;
             }
             else {
                 kt.seconds = 59;
