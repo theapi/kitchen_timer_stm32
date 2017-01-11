@@ -75,6 +75,7 @@ void Button_StateMachineRun(void) {
         button.flag &= ~(BUTTON_M);
         /* Reset the button timer */
         button.down = 0x00U;
+        button.state = BUTT_NONE;
         break;
     case BUTT_S_DOWN:
         /* Check for Both M & S being pressed */
@@ -103,10 +104,12 @@ void Button_StateMachineRun(void) {
         button.flag &= ~(BUTTON_S);
         /* Reset the button timer */
         button.down = 0x00U;
+        button.state = BUTT_NONE;
         break;
     case BUTT_MS:
         /* Reset time */
         kt.state = KT_STATE_RESET;
+        button.state = BUTT_NONE;
         break;
     case BUTT_STSP_DOWN:
         if (kt.state == KT_STATE_SETUP || kt.state == KT_STATE_STOPPED) {

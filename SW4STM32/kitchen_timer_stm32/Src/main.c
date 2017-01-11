@@ -57,9 +57,7 @@ int main(void) {
 
         Screen_Process(&hlcd, &kt);
 
-        ///@todo check for & handle a button interrupt before sleeping
-
-        if (kt.state != KT_STATE_OFF && (button.down == 0) && (alarm_duration_timer == 0)) {
+        if (kt.state != KT_STATE_OFF && (button.state == BUTT_NONE) && (alarm_duration_timer == 0)) {
             //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 
             /* Disable the systick interrupt to not wake up every millisecond */
