@@ -49,8 +49,6 @@ EEPROM_TypeDef eeprom;
 
 /**
  * Initialize all the counters.
- *
- * NOPE always gets optimised out :(
  */
 void EEPROM_init(void) {
     uint8_t tmp = 0;
