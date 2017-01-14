@@ -106,6 +106,7 @@ KT_StateTypeDef KT_StateInit(KT_StateTypeDef state) {
     HAL_RTC_MspInit(&hrtc);
     /* Initialise the kitchen timer structure */
     KT_Init();
+
     /* Use the stored minutes */
     kt.minutes = KT_MinutesLoad();
 

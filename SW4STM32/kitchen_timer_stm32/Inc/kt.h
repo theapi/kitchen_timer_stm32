@@ -13,7 +13,7 @@
 #include "main.h"
 #include "stdint.h"
 #include "button.h"
-
+#include "eeprom.h"
 
 
 typedef enum {
@@ -48,6 +48,8 @@ extern RTC_HandleTypeDef hrtc;
 extern TIM_HandleTypeDef htim2;
 extern LCD_HandleTypeDef hlcd;
 extern Button_TypeDef button;
+extern EEPROM_TypeDef eeprom;
+
 
 extern volatile uint32_t alarm_duration_timer;
 extern volatile uint32_t alarm_pulse_timer;

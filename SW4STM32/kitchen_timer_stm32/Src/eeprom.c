@@ -1,15 +1,15 @@
 /*
  * @file eeprom.c
  *
- * Address can be one of 15 addresses, a 4 bit number.
+ * Address can be one of 15 ( a 4 bit number) addresses.
  * So the data gets saved in 15 different locations,
- * meaning 7 times the normal wear, 150,000 saves instead of 10,000.
+ * meaning 15 times the normal wear, 150,000 saves instead of 10,000.
  * 1 save a day ~= 411 years
  * 10 saves a day _= 41 years
  * 100 saves a day _= 4 years
  * Should be enough :)
  *
- * So with this each data needs 15 words = 15 addresses
+ * So with this each data needs 15 words
  * Flash Data EEPROM can hold 2 Kbytes
  *
  * The way it works:
@@ -49,24 +49,28 @@ EEPROM_TypeDef eeprom;
 
 /**
  * Initialize all the counters.
+ *
+ * NOPE always gets optimised out :(
  */
 void EEPROM_init(void) {
-//    uint8_t tmp;
-//    uint32_t address;
-//    uint32_t word;
-//    for (uint8_t id; id++; id < NUM_DATA_IDS) {
-//        /* Find the highest counter */
-//        address = id * 16;
-//        /* Check each possible address for the data id */
-//        for (uint8_t j; j++; j < 16) {
-//            address += j;
-//            word = EEPROM_WordRead(address);
-//            tmp = EEPROM_GetCounterFromWord(word);
-//            if (tmp > eeprom.counters[id]) {
-//                eeprom.counters[id] = tmp;
-//            }
-//        }
-//    }
+    uint8_t tmp = 0;
+    uint32_t address = 0;
+    uint32_t word = 0;
+    uint32_t count = 0;
+
+    for (uint8_t id = 0; id < NUM_DATA_IDS; id++) {
+        count = eeprom.counters[id];
+        /* Check each possible address for the data id */
+        for (uint8_t j = 0; j < 16; j++) {
+            address = (id * 64) + (j * 4);
+            word = EEPROM_WordRead(address);
+            tmp = EEPROM_GetCounterFromWord(word);
+            if (tmp > count) {
+                eeprom.counters[id] = tmp;
+            }
+        }
+    }
+
 }
 
 /**
@@ -83,9 +87,7 @@ HAL_StatusTypeDef EEPROM_DataSave(uint8_t id, uint8_t data) {
     ++eeprom.counters[id];
 
     /* Join the counter & the data into the word */
-    word = (eeprom.counters[id] << 4);
-    word = (word | data);
-
+    word = (eeprom.counters[id] << 4) | data;
     return EEPROM_WordWrite(address, word);
 }
 
@@ -95,7 +97,7 @@ HAL_StatusTypeDef EEPROM_DataSave(uint8_t id, uint8_t data) {
 uint8_t EEPROM_DataLoad(uint8_t id) {
     uint32_t address = EEPROM_GetDataReadAddress(id);
     uint32_t word = EEPROM_WordRead(address);
-
+    eeprom.debug = EEPROM_GetDataFromWord(word);
     eeprom.counters[id] = EEPROM_GetCounterFromWord(word);
     return EEPROM_GetDataFromWord(word);
 }
@@ -107,7 +109,7 @@ uint32_t EEPROM_GetCounterFromWord(uint32_t word) {
 
 uint8_t EEPROM_GetDataFromWord(uint32_t word) {
     /* Data is the least significant 8 bits */
-    return (0xFF & word);
+    return (0x0F & word);
 }
 
 /**

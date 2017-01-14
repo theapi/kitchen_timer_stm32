@@ -27,7 +27,12 @@ typedef struct
      * 8 bits will be used for the byte of data being stored
      */
     uint32_t counters[NUM_DATA_IDS];
+    uint32_t debug; // need a var that does get optomised out
 } EEPROM_TypeDef;
+
+
+extern EEPROM_TypeDef eeprom;
+
 
 /**
  * Initialize all the counters.
