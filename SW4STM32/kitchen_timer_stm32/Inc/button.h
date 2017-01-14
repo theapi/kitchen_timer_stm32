@@ -13,8 +13,6 @@
 #include "main.h"
 #include "stdint.h"
 
-extern volatile uint32_t alarm_duration_timer;
-
 enum button_flags {
     BUTTON_M    = 1,
     BUTTON_S    = 2,
@@ -41,8 +39,10 @@ typedef struct
     enum button_flags flag;     /* Register of all the button positions */
     Button_StateTypeDef state;  /* Current state of the button state machine */
 } Button_TypeDef;
-extern Button_TypeDef button;
 
+
+extern Button_TypeDef button;
+extern volatile uint32_t alarm_duration_timer;
 
 
 void Button_Init(void);

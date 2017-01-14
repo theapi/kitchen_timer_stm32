@@ -17,8 +17,22 @@ void KT_Init() {
     kt.update = 1;
     kt.idle_time = 0;
     kt.state = KT_STATE_INIT;
+    EEPROM_init();
 }
 
+/**
+ * Load the save minutes setting.
+ */
+uint8_t KT_MinutesLoad(void) {
+    return EEPROM_DataLoad(0);
+}
+
+/**
+ * Save the minutes setting
+ */
+HAL_StatusTypeDef KT_MinutesSave(uint8_t minutes) {
+    return EEPROM_DataSave(0, minutes);
+}
 /**
  *  Increase the countdown time.
  */
@@ -93,7 +107,7 @@ KT_StateTypeDef KT_StateInit(KT_StateTypeDef state) {
     /* Initialise the kitchen timer structure */
     KT_Init();
     /* Use the stored minutes */
-    kt.minutes = EEPROM_ByteRead(EEPROM_ADDRESS);
+    kt.minutes = KT_MinutesLoad();
 
     button.state = BUTT_NONE;
     return KT_STATE_SETUP;

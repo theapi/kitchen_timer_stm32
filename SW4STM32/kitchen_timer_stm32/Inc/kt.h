@@ -14,21 +14,7 @@
 #include "stdint.h"
 #include "button.h"
 
-extern RTC_HandleTypeDef hrtc;
-extern TIM_HandleTypeDef htim2;
-extern LCD_HandleTypeDef hlcd;
-extern Button_TypeDef button;
 
-extern volatile uint32_t alarm_duration_timer;
-extern volatile uint32_t alarm_pulse_timer;
-
-/*
-enum button_flags {
-    BUTTON_M    = 1,
-    BUTTON_S    = 2,
-    BUTTON_STSP = 4,
-};
-*/
 
 typedef enum {
     KT_STATE_INIT,
@@ -53,12 +39,18 @@ typedef struct
     uint8_t ampm;
     uint8_t update;
     uint32_t idle_time;
-//    uint32_t button_down;
-//    enum button_flags button_flag;
     KT_StateTypeDef state;
 } KT_TypeDef;
-extern KT_TypeDef kt;
 
+
+extern KT_TypeDef kt;
+extern RTC_HandleTypeDef hrtc;
+extern TIM_HandleTypeDef htim2;
+extern LCD_HandleTypeDef hlcd;
+extern Button_TypeDef button;
+
+extern volatile uint32_t alarm_duration_timer;
+extern volatile uint32_t alarm_pulse_timer;
 
 
 void KT_Init(void);
@@ -66,6 +58,8 @@ void KT_IncreaseTime(void);
 void KT_DecreaseTime(void);
 uint8_t KT_IdleTimeout(void);
 void KT_RTCEx_WakeUpTimerEventCallback(void);
+uint8_t KT_MinutesLoad(void);
+HAL_StatusTypeDef KT_MinutesSave(uint8_t minutes);
 
 void KT_StateMachineRun(void);
 /* State functions */

@@ -20,6 +20,7 @@ Archive member included to satisfy reference by file (symbol)
 Allocating common symbols
 Common symbol       size              file
 
+eeprom              0x8               Src/eeprom.o
 uwTick              0x4               Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.o
 button              0x8               Src/button.o
 ProcFlash           0x18              Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_flash.o
@@ -2939,6 +2940,7 @@ Discarded input sections
  .group         0x00000000        0x8 Src/button.o
  .group         0x00000000        0x8 Src/button.o
  .group         0x00000000        0x8 Src/button.o
+ .group         0x00000000        0x8 Src/button.o
  .text          0x00000000        0x0 Src/button.o
  .data          0x00000000        0x0 Src/button.o
  .bss           0x00000000        0x0 Src/button.o
@@ -3069,6 +3071,16 @@ Discarded input sections
  .text          0x00000000        0x0 Src/eeprom.o
  .data          0x00000000        0x0 Src/eeprom.o
  .bss           0x00000000        0x0 Src/eeprom.o
+ .text.EEPROM_GetCounterFromWord
+                0x00000000        0x4 Src/eeprom.o
+ .text.EEPROM_GetDataFromWord
+                0x00000000        0x4 Src/eeprom.o
+ .text.EEPROM_ByteWrite
+                0x00000000       0x30 Src/eeprom.o
+ .text.EEPROM_ByteRead
+                0x00000000       0x10 Src/eeprom.o
+ .text.EEPROM_WordRead
+                0x00000000       0x10 Src/eeprom.o
  .debug_macro   0x00000000      0x838 Src/eeprom.o
  .debug_macro   0x00000000       0x28 Src/eeprom.o
  .debug_macro   0x00000000       0x9a Src/eeprom.o
@@ -3317,6 +3329,7 @@ Discarded input sections
  .group         0x00000000        0x8 Src/kt.o
  .group         0x00000000        0x8 Src/kt.o
  .group         0x00000000        0x8 Src/kt.o
+ .group         0x00000000        0x8 Src/kt.o
  .text          0x00000000        0x0 Src/kt.o
  .data          0x00000000        0x0 Src/kt.o
  .bss           0x00000000        0x0 Src/kt.o
@@ -3385,6 +3398,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x703 Src/kt.o
  .debug_macro   0x00000000      0x120 Src/kt.o
  .debug_macro   0x00000000      0x165 Src/kt.o
+ .debug_macro   0x00000000       0x10 Src/kt.o
  .group         0x00000000        0x8 Src/lcd.o
  .group         0x00000000        0x8 Src/lcd.o
  .group         0x00000000        0x8 Src/lcd.o
@@ -3574,6 +3588,7 @@ Discarded input sections
  .group         0x00000000        0x8 Src/main.o
  .group         0x00000000        0x8 Src/main.o
  .group         0x00000000        0x8 Src/main.o
+ .group         0x00000000        0x8 Src/main.o
  .text          0x00000000        0x0 Src/main.o
  .data          0x00000000        0x0 Src/main.o
  .debug_macro   0x00000000      0x838 Src/main.o
@@ -3637,6 +3652,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x703 Src/main.o
  .debug_macro   0x00000000      0x120 Src/main.o
  .debug_macro   0x00000000      0x165 Src/main.o
+ .debug_macro   0x00000000       0x10 Src/main.o
  .debug_macro   0x00000000       0x34 Src/main.o
  .group         0x00000000        0x8 Src/rtc.o
  .group         0x00000000        0x8 Src/rtc.o
@@ -4644,7 +4660,7 @@ LOAD /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.
                 0x08000000                g_pfnVectors
                 0x080000c0                . = ALIGN (0x4)
 
-.text           0x080000c0     0x24fc
+.text           0x080000c0     0x2588
                 0x080000c0                . = ALIGN (0x4)
  *(.text)
  .text          0x080000c0       0x60 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtbegin.o
@@ -4863,212 +4879,232 @@ LOAD /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.
  .text.Button_StateMachineRun
                 0x08001a60       0xf0 Src/button.o
                 0x08001a60                Button_StateMachineRun
- .text.EEPROM_ByteWrite
-                0x08001b50       0x24 Src/eeprom.o
-                0x08001b50                EEPROM_ByteWrite
- .text.EEPROM_ByteRead
-                0x08001b74       0x10 Src/eeprom.o
-                0x08001b74                EEPROM_ByteRead
+ .text.EEPROM_init
+                0x08001b50        0x2 Src/eeprom.o
+                0x08001b50                EEPROM_init
+ *fill*         0x08001b52        0x2 
+ .text.EEPROM_GetDataReadAddress
+                0x08001b54       0x18 Src/eeprom.o
+                0x08001b54                EEPROM_GetDataReadAddress
+ .text.EEPROM_DataLoad
+                0x08001b6c       0x24 Src/eeprom.o
+                0x08001b6c                EEPROM_DataLoad
+ .text.EEPROM_GetDataWriteAddress
+                0x08001b90       0x18 Src/eeprom.o
+                0x08001b90                EEPROM_GetDataWriteAddress
+ .text.EEPROM_WordWrite
+                0x08001ba8       0x24 Src/eeprom.o
+                0x08001ba8                EEPROM_WordWrite
+ .text.EEPROM_DataSave
+                0x08001bcc       0x24 Src/eeprom.o
+                0x08001bcc                EEPROM_DataSave
  .text.MX_GPIO_Init
-                0x08001b84       0xe8 Src/gpio.o
-                0x08001b84                MX_GPIO_Init
- .text.KT_Init  0x08001c6c       0x18 Src/kt.o
-                0x08001c6c                KT_Init
+                0x08001bf0       0xe8 Src/gpio.o
+                0x08001bf0                MX_GPIO_Init
+ .text.KT_Init  0x08001cd8       0x20 Src/kt.o
+                0x08001cd8                KT_Init
+ .text.KT_MinutesLoad
+                0x08001cf8        0xa Src/kt.o
+                0x08001cf8                KT_MinutesLoad
+ .text.KT_MinutesSave
+                0x08001d02        0xc Src/kt.o
+                0x08001d02                KT_MinutesSave
+ *fill*         0x08001d0e        0x2 
  .text.KT_IncreaseTime
-                0x08001c84       0x1c Src/kt.o
-                0x08001c84                KT_IncreaseTime
+                0x08001d10       0x1c Src/kt.o
+                0x08001d10                KT_IncreaseTime
  .text.KT_DecreaseTime
-                0x08001ca0       0x1c Src/kt.o
-                0x08001ca0                KT_DecreaseTime
+                0x08001d2c       0x1c Src/kt.o
+                0x08001d2c                KT_DecreaseTime
  .text.KT_IdleTimeout
-                0x08001cbc       0x14 Src/kt.o
-                0x08001cbc                KT_IdleTimeout
+                0x08001d48       0x14 Src/kt.o
+                0x08001d48                KT_IdleTimeout
  .text.KT_RTCEx_WakeUpTimerEventCallback
-                0x08001cd0       0x48 Src/kt.o
-                0x08001cd0                KT_RTCEx_WakeUpTimerEventCallback
+                0x08001d5c       0x48 Src/kt.o
+                0x08001d5c                KT_RTCEx_WakeUpTimerEventCallback
  .text.KT_StateInit
-                0x08001d18       0x3c Src/kt.o
-                0x08001d18                KT_StateInit
+                0x08001da4       0x3c Src/kt.o
+                0x08001da4                KT_StateInit
  .text.KT_StateOff
-                0x08001d54       0x24 Src/kt.o
-                0x08001d54                KT_StateOff
+                0x08001de0       0x24 Src/kt.o
+                0x08001de0                KT_StateOff
  .text.KT_StateSetup
-                0x08001d78       0x1c Src/kt.o
-                0x08001d78                KT_StateSetup
+                0x08001e04       0x1c Src/kt.o
+                0x08001e04                KT_StateSetup
  .text.KT_StateStopped
-                0x08001d94       0x1c Src/kt.o
-                0x08001d94                KT_StateStopped
+                0x08001e20       0x1c Src/kt.o
+                0x08001e20                KT_StateStopped
  .text.KT_StateAlarmStart
-                0x08001db0       0x64 Src/kt.o
-                0x08001db0                KT_StateAlarmStart
+                0x08001e3c       0x64 Src/kt.o
+                0x08001e3c                KT_StateAlarmStart
  .text.KT_StateAlarmOnHigh
-                0x08001e14       0x58 Src/kt.o
-                0x08001e14                KT_StateAlarmOnHigh
+                0x08001ea0       0x58 Src/kt.o
+                0x08001ea0                KT_StateAlarmOnHigh
  .text.KT_StateAlarmOnLow
-                0x08001e6c       0x20 Src/kt.o
-                0x08001e6c                KT_StateAlarmOnLow
+                0x08001ef8       0x20 Src/kt.o
+                0x08001ef8                KT_StateAlarmOnLow
  .text.KT_StateAlarmStop
-                0x08001e8c       0x4c Src/kt.o
-                0x08001e8c                KT_StateAlarmStop
+                0x08001f18       0x4c Src/kt.o
+                0x08001f18                KT_StateAlarmStop
  .text.KT_StateMachineRun
-                0x08001ed8       0x8c Src/kt.o
-                0x08001ed8                KT_StateMachineRun
+                0x08001f64       0x8c Src/kt.o
+                0x08001f64                KT_StateMachineRun
  .text.MX_LCD_Init
-                0x08001f64       0x5c Src/lcd.o
-                0x08001f64                MX_LCD_Init
+                0x08001ff0       0x5c Src/lcd.o
+                0x08001ff0                MX_LCD_Init
  .text.HAL_LCD_MspInit
-                0x08001fc0       0x60 Src/lcd.o
-                0x08001fc0                HAL_LCD_MspInit
+                0x0800204c       0x60 Src/lcd.o
+                0x0800204c                HAL_LCD_MspInit
  .text.startup.main
-                0x08002020       0x90 Src/main.o
-                0x08002020                main
+                0x080020ac       0x90 Src/main.o
+                0x080020ac                main
  .text.HAL_GPIO_EXTI_Callback
-                0x080020b0        0x8 Src/main.o
-                0x080020b0                HAL_GPIO_EXTI_Callback
+                0x0800213c        0x8 Src/main.o
+                0x0800213c                HAL_GPIO_EXTI_Callback
  .text.HAL_RTCEx_WakeUpTimerEventCallback
-                0x080020b8        0x8 Src/main.o
-                0x080020b8                HAL_RTCEx_WakeUpTimerEventCallback
+                0x08002144        0x8 Src/main.o
+                0x08002144                HAL_RTCEx_WakeUpTimerEventCallback
  .text.Error_Handler
-                0x080020c0       0x10 Src/main.o
-                0x080020c0                Error_Handler
+                0x0800214c       0x10 Src/main.o
+                0x0800214c                Error_Handler
  .text.MX_RTC_Init
-                0x080020d0       0x84 Src/rtc.o
-                0x080020d0                MX_RTC_Init
+                0x0800215c       0x84 Src/rtc.o
+                0x0800215c                MX_RTC_Init
  .text.HAL_RTC_MspInit
-                0x08002154       0x30 Src/rtc.o
-                0x08002154                HAL_RTC_MspInit
+                0x080021e0       0x30 Src/rtc.o
+                0x080021e0                HAL_RTC_MspInit
  .text.HAL_RTC_MspDeInit
-                0x08002184       0x28 Src/rtc.o
-                0x08002184                HAL_RTC_MspDeInit
+                0x08002210       0x28 Src/rtc.o
+                0x08002210                HAL_RTC_MspDeInit
  .text.Screen_Update
-                0x080021ac       0xfc Src/screen.o
-                0x080021ac                Screen_Update
+                0x08002238       0xfc Src/screen.o
+                0x08002238                Screen_Update
  .text.Screen_Process
-                0x080022a8       0x18 Src/screen.o
-                0x080022a8                Screen_Process
+                0x08002334       0x18 Src/screen.o
+                0x08002334                Screen_Process
  .text.Screen_BlinkStart
-                0x080022c0       0x14 Src/screen.o
-                0x080022c0                Screen_BlinkStart
+                0x0800234c       0x14 Src/screen.o
+                0x0800234c                Screen_BlinkStart
  .text.Screen_BlinkStop
-                0x080022d4       0x14 Src/screen.o
-                0x080022d4                Screen_BlinkStop
+                0x08002360       0x14 Src/screen.o
+                0x08002360                Screen_BlinkStop
  .text.HAL_MspInit
-                0x080022e8       0x40 Src/stm32l0xx_hal_msp.o
-                0x080022e8                HAL_MspInit
+                0x08002374       0x40 Src/stm32l0xx_hal_msp.o
+                0x08002374                HAL_MspInit
  .text.NMI_Handler
-                0x08002328        0x2 Src/stm32l0xx_it.o
-                0x08002328                NMI_Handler
+                0x080023b4        0x2 Src/stm32l0xx_it.o
+                0x080023b4                NMI_Handler
  .text.HardFault_Handler
-                0x0800232a        0x2 Src/stm32l0xx_it.o
-                0x0800232a                HardFault_Handler
+                0x080023b6        0x2 Src/stm32l0xx_it.o
+                0x080023b6                HardFault_Handler
  .text.SVC_Handler
-                0x0800232c        0x2 Src/stm32l0xx_it.o
-                0x0800232c                SVC_Handler
+                0x080023b8        0x2 Src/stm32l0xx_it.o
+                0x080023b8                SVC_Handler
  .text.PendSV_Handler
-                0x0800232e        0x2 Src/stm32l0xx_it.o
-                0x0800232e                PendSV_Handler
+                0x080023ba        0x2 Src/stm32l0xx_it.o
+                0x080023ba                PendSV_Handler
  .text.SysTick_Handler
-                0x08002330        0xc Src/stm32l0xx_it.o
-                0x08002330                SysTick_Handler
+                0x080023bc        0xc Src/stm32l0xx_it.o
+                0x080023bc                SysTick_Handler
  .text.RTC_IRQHandler
-                0x0800233c       0x10 Src/stm32l0xx_it.o
-                0x0800233c                RTC_IRQHandler
+                0x080023c8       0x10 Src/stm32l0xx_it.o
+                0x080023c8                RTC_IRQHandler
  .text.EXTI4_15_IRQHandler
-                0x0800234c       0x16 Src/stm32l0xx_it.o
-                0x0800234c                EXTI4_15_IRQHandler
- *fill*         0x08002362        0x2 
+                0x080023d8       0x16 Src/stm32l0xx_it.o
+                0x080023d8                EXTI4_15_IRQHandler
+ *fill*         0x080023ee        0x2 
  .text.SystemClock_Config
-                0x08002364       0xa0 Src/system_clock_conf.o
-                0x08002364                SystemClock_Config
+                0x080023f0       0xa0 Src/system_clock_conf.o
+                0x080023f0                SystemClock_Config
  .text.SystemInit
-                0x08002404       0x5c Src/system_stm32l0xx.o
-                0x08002404                SystemInit
+                0x08002490       0x5c Src/system_stm32l0xx.o
+                0x08002490                SystemInit
  .text.HAL_TIM_Base_MspInit
-                0x08002460       0x1c Src/tim.o
-                0x08002460                HAL_TIM_Base_MspInit
+                0x080024ec       0x1c Src/tim.o
+                0x080024ec                HAL_TIM_Base_MspInit
  .text.HAL_TIM_MspPostInit
-                0x0800247c       0x30 Src/tim.o
-                0x0800247c                HAL_TIM_MspPostInit
+                0x08002508       0x30 Src/tim.o
+                0x08002508                HAL_TIM_MspPostInit
  .text.MX_TIM2_Init
-                0x080024ac       0x90 Src/tim.o
-                0x080024ac                MX_TIM2_Init
+                0x08002538       0x90 Src/tim.o
+                0x08002538                MX_TIM2_Init
  .text.HAL_TIM_Base_MspDeInit
-                0x0800253c       0x1c Src/tim.o
-                0x0800253c                HAL_TIM_Base_MspDeInit
+                0x080025c8       0x1c Src/tim.o
+                0x080025c8                HAL_TIM_Base_MspDeInit
  .text.__libc_init_array
-                0x08002558       0x4c /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv6-m/libc_nano.a(lib_a-init.o)
-                0x08002558                __libc_init_array
+                0x080025e4       0x4c /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv6-m/libc_nano.a(lib_a-init.o)
+                0x080025e4                __libc_init_array
  *(.glue_7)
- .glue_7        0x080025a4        0x0 linker stubs
+ .glue_7        0x08002630        0x0 linker stubs
  *(.glue_7t)
- .glue_7t       0x080025a4        0x0 linker stubs
+ .glue_7t       0x08002630        0x0 linker stubs
  *(.eh_frame)
- .eh_frame      0x080025a4        0x0 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtbegin.o
+ .eh_frame      0x08002630        0x0 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtbegin.o
  *(.init)
- .init          0x080025a4        0x4 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crti.o
-                0x080025a4                _init
- .init          0x080025a8        0x8 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtn.o
+ .init          0x08002630        0x4 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crti.o
+                0x08002630                _init
+ .init          0x08002634        0x8 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtn.o
  *(.fini)
- .fini          0x080025b0        0x4 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crti.o
-                0x080025b0                _fini
- .fini          0x080025b4        0x8 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtn.o
-                0x080025bc                . = ALIGN (0x4)
-                0x080025bc                _etext = .
+ .fini          0x0800263c        0x4 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crti.o
+                0x0800263c                _fini
+ .fini          0x08002640        0x8 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtn.o
+                0x08002648                . = ALIGN (0x4)
+                0x08002648                _etext = .
 
-.vfp11_veneer   0x080025bc        0x0
- .vfp11_veneer  0x080025bc        0x0 linker stubs
+.vfp11_veneer   0x08002648        0x0
+ .vfp11_veneer  0x08002648        0x0 linker stubs
 
-.v4_bx          0x080025bc        0x0
- .v4_bx         0x080025bc        0x0 linker stubs
+.v4_bx          0x08002648        0x0
+ .v4_bx         0x08002648        0x0 linker stubs
 
-.iplt           0x080025bc        0x0
- .iplt          0x080025bc        0x0 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtbegin.o
+.iplt           0x08002648        0x0
+ .iplt          0x08002648        0x0 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtbegin.o
 
-.rodata         0x080025bc      0x2e4
-                0x080025bc                . = ALIGN (0x4)
+.rodata         0x08002648      0x2e4
+                0x08002648                . = ALIGN (0x4)
  *(.rodata)
- .rodata        0x080025bc      0x2c0 Src/screen.o
-                0x080025bc                lcd_digits
- .rodata        0x0800287c       0x21 Src/system_stm32l0xx.o
-                0x0800287c                PLLMulTable
-                0x08002885                AHBPrescTable
-                0x08002895                APBPrescTable
+ .rodata        0x08002648      0x2c0 Src/screen.o
+                0x08002648                lcd_digits
+ .rodata        0x08002908       0x21 Src/system_stm32l0xx.o
+                0x08002908                PLLMulTable
+                0x08002911                AHBPrescTable
+                0x08002921                APBPrescTable
  *(.rodata*)
-                0x080028a0                . = ALIGN (0x4)
- *fill*         0x0800289d        0x3 
+                0x0800292c                . = ALIGN (0x4)
+ *fill*         0x08002929        0x3 
 
-.rel.dyn        0x080028a0        0x0
- .rel.iplt      0x080028a0        0x0 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtbegin.o
+.rel.dyn        0x0800292c        0x0
+ .rel.iplt      0x0800292c        0x0 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtbegin.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
 
-.ARM            0x080028a0        0x0
-                0x080028a0                __exidx_start = .
+.ARM            0x0800292c        0x0
+                0x0800292c                __exidx_start = .
  *(.ARM.exidx*)
-                0x080028a0                __exidx_end = .
+                0x0800292c                __exidx_end = .
 
-.preinit_array  0x080028a0        0x0
-                0x080028a0                PROVIDE (__preinit_array_start, .)
+.preinit_array  0x0800292c        0x0
+                0x0800292c                PROVIDE (__preinit_array_start, .)
  *(.preinit_array*)
-                0x080028a0                PROVIDE (__preinit_array_end, .)
+                0x0800292c                PROVIDE (__preinit_array_end, .)
 
-.init_array     0x080028a0        0x4
-                0x080028a0                PROVIDE (__init_array_start, .)
+.init_array     0x0800292c        0x4
+                0x0800292c                PROVIDE (__init_array_start, .)
  *(SORT(.init_array.*))
  *(.init_array*)
- .init_array    0x080028a0        0x4 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtbegin.o
-                0x080028a4                PROVIDE (__init_array_end, .)
+ .init_array    0x0800292c        0x4 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtbegin.o
+                0x08002930                PROVIDE (__init_array_end, .)
 
-.fini_array     0x080028a4        0x4
+.fini_array     0x08002930        0x4
                 [!provide]                PROVIDE (__fini_array_start, .)
  *(SORT(.fini_array.*))
  *(.fini_array*)
- .fini_array    0x080028a4        0x4 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtbegin.o
+ .fini_array    0x08002930        0x4 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtbegin.o
                 [!provide]                PROVIDE (__fini_array_end, .)
-                0x080028a8                _sidata = LOADADDR (.data)
+                0x08002934                _sidata = LOADADDR (.data)
 
-.data           0x20000000        0x4 load address 0x080028a8
+.data           0x20000000        0x4 load address 0x08002934
                 0x20000000                . = ALIGN (0x4)
                 0x20000000                _sdata = .
  *(.data)
@@ -5078,14 +5114,14 @@ LOAD /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.
                 0x20000004                . = ALIGN (0x4)
                 0x20000004                _edata = .
 
-.jcr            0x20000004        0x0 load address 0x080028ac
+.jcr            0x20000004        0x0 load address 0x08002938
  .jcr           0x20000004        0x0 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtbegin.o
 
-.igot.plt       0x20000004        0x0 load address 0x080028ac
+.igot.plt       0x20000004        0x0 load address 0x08002938
  .igot.plt      0x20000004        0x0 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtbegin.o
                 0x20000004                . = ALIGN (0x4)
 
-.bss            0x20000004       0xec load address 0x080028ac
+.bss            0x20000004       0xf4 load address 0x08002938
                 0x20000004                _sbss = .
                 0x20000004                __bss_start__ = _sbss
  *(.bss)
@@ -5101,28 +5137,30 @@ LOAD /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.
                 0x2000002c                ProcFlash
  COMMON         0x20000044        0x8 Src/button.o
                 0x20000044                button
- COMMON         0x2000004c        0xc Src/kt.o
-                0x2000004c                kt
- COMMON         0x20000058       0x3c Src/lcd.o
-                0x20000058                hlcd
- COMMON         0x20000094       0x24 Src/rtc.o
-                0x20000094                hrtc
- COMMON         0x200000b8       0x38 Src/tim.o
-                0x200000b8                htim2
-                0x200000f0                . = ALIGN (0x4)
-                0x200000f0                _ebss = .
-                0x200000f0                __bss_end__ = _ebss
+ COMMON         0x2000004c        0x8 Src/eeprom.o
+                0x2000004c                eeprom
+ COMMON         0x20000054        0xc Src/kt.o
+                0x20000054                kt
+ COMMON         0x20000060       0x3c Src/lcd.o
+                0x20000060                hlcd
+ COMMON         0x2000009c       0x24 Src/rtc.o
+                0x2000009c                hrtc
+ COMMON         0x200000c0       0x38 Src/tim.o
+                0x200000c0                htim2
+                0x200000f8                . = ALIGN (0x4)
+                0x200000f8                _ebss = .
+                0x200000f8                __bss_end__ = _ebss
 
 ._user_heap_stack
-                0x200000f0      0x600 load address 0x080028ac
-                0x200000f0                . = ALIGN (0x8)
+                0x200000f8      0x600 load address 0x08002938
+                0x200000f8                . = ALIGN (0x8)
                 [!provide]                PROVIDE (end, .)
                 [!provide]                PROVIDE (_end, .)
-                0x200002f0                . = (. + _Min_Heap_Size)
- *fill*         0x200000f0      0x200 
-                0x200006f0                . = (. + _Min_Stack_Size)
- *fill*         0x200002f0      0x400 
-                0x200006f0                . = ALIGN (0x8)
+                0x200002f8                . = (. + _Min_Heap_Size)
+ *fill*         0x200000f8      0x200 
+                0x200006f8                . = (. + _Min_Stack_Size)
+ *fill*         0x200002f8      0x400 
+                0x200006f8                . = ALIGN (0x8)
 
 /DISCARD/
  libc.a(*)
@@ -5204,7 +5242,7 @@ LOAD /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.
                 0x00000638       0x1e /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/crtn.o
 OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
 
-.debug_line     0x00000000    0x115c1
+.debug_line     0x00000000    0x116b9
  .debug_line    0x00000000       0xb2 Drivers/CMSIS/Device/ST/STM32L0xx/Source/Templates/gcc/startup_stm32l053xx.o
  .debug_line    0x000000b2      0xa51 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.o
  .debug_line    0x00000b03      0xa0e Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_cortex.o
@@ -5220,21 +5258,21 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
  .debug_line    0x000074ca      0xfd0 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_rtc_ex.o
  .debug_line    0x0000849a     0x1633 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim.o
  .debug_line    0x00009acd      0x8df Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim_ex.o
- .debug_line    0x0000a3ac      0x8c3 Src/button.o
- .debug_line    0x0000ac6f      0x86a Src/eeprom.o
- .debug_line    0x0000b4d9      0x89f Src/gpio.o
- .debug_line    0x0000bd78      0xa0a Src/kt.o
- .debug_line    0x0000c782      0x8d1 Src/lcd.o
- .debug_line    0x0000d053      0x906 Src/main.o
- .debug_line    0x0000d959      0x8a2 Src/rtc.o
- .debug_line    0x0000e1fb      0x8ee Src/screen.o
- .debug_line    0x0000eae9      0x85b Src/stm32l0xx_hal_msp.o
- .debug_line    0x0000f344      0x8a8 Src/stm32l0xx_it.o
- .debug_line    0x0000fbec      0x894 Src/system_clock_conf.o
- .debug_line    0x00010480      0x889 Src/system_stm32l0xx.o
- .debug_line    0x00010d09      0x8b8 Src/tim.o
+ .debug_line    0x0000a3ac      0x8c1 Src/button.o
+ .debug_line    0x0000ac6d      0x93e Src/eeprom.o
+ .debug_line    0x0000b5ab      0x89f Src/gpio.o
+ .debug_line    0x0000be4a      0xa30 Src/kt.o
+ .debug_line    0x0000c87a      0x8d1 Src/lcd.o
+ .debug_line    0x0000d14b      0x906 Src/main.o
+ .debug_line    0x0000da51      0x8a2 Src/rtc.o
+ .debug_line    0x0000e2f3      0x8ee Src/screen.o
+ .debug_line    0x0000ebe1      0x85b Src/stm32l0xx_hal_msp.o
+ .debug_line    0x0000f43c      0x8a8 Src/stm32l0xx_it.o
+ .debug_line    0x0000fce4      0x894 Src/system_clock_conf.o
+ .debug_line    0x00010578      0x889 Src/system_stm32l0xx.o
+ .debug_line    0x00010e01      0x8b8 Src/tim.o
 
-.debug_info     0x00000000     0xe8e2
+.debug_info     0x00000000     0xec84
  .debug_info    0x00000000       0xbd Drivers/CMSIS/Device/ST/STM32L0xx/Source/Templates/gcc/startup_stm32l053xx.o
  .debug_info    0x000000bd      0x73a Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.o
  .debug_info    0x000007f7      0x8d7 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_cortex.o
@@ -5250,21 +5288,21 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
  .debug_info    0x000054f4      0xe8b Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_rtc_ex.o
  .debug_info    0x0000637f     0x2cd3 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim.o
  .debug_info    0x00009052      0x591 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim_ex.o
- .debug_info    0x000095e3      0x410 Src/button.o
- .debug_info    0x000099f3      0x1b9 Src/eeprom.o
- .debug_info    0x00009bac      0x567 Src/gpio.o
- .debug_info    0x0000a113     0x10dd Src/kt.o
- .debug_info    0x0000b1f0      0x63b Src/lcd.o
- .debug_info    0x0000b82b      0xaa3 Src/main.o
- .debug_info    0x0000c2ce      0x7b0 Src/rtc.o
- .debug_info    0x0000ca7e      0x4e3 Src/screen.o
- .debug_info    0x0000cf61      0x30b Src/stm32l0xx_hal_msp.o
- .debug_info    0x0000d26c      0x415 Src/stm32l0xx_it.o
- .debug_info    0x0000d681      0x4d5 Src/system_clock_conf.o
- .debug_info    0x0000db56      0x37b Src/system_stm32l0xx.o
- .debug_info    0x0000ded1      0xa11 Src/tim.o
+ .debug_info    0x000095e3      0x3fe Src/button.o
+ .debug_info    0x000099e1      0x4be Src/eeprom.o
+ .debug_info    0x00009e9f      0x567 Src/gpio.o
+ .debug_info    0x0000a406     0x118c Src/kt.o
+ .debug_info    0x0000b592      0x63b Src/lcd.o
+ .debug_info    0x0000bbcd      0xaa3 Src/main.o
+ .debug_info    0x0000c670      0x7b0 Src/rtc.o
+ .debug_info    0x0000ce20      0x4e3 Src/screen.o
+ .debug_info    0x0000d303      0x30b Src/stm32l0xx_hal_msp.o
+ .debug_info    0x0000d60e      0x415 Src/stm32l0xx_it.o
+ .debug_info    0x0000da23      0x4d5 Src/system_clock_conf.o
+ .debug_info    0x0000def8      0x37b Src/system_stm32l0xx.o
+ .debug_info    0x0000e273      0xa11 Src/tim.o
 
-.debug_abbrev   0x00000000     0x2ef9
+.debug_abbrev   0x00000000     0x2fd5
  .debug_abbrev  0x00000000       0x12 Drivers/CMSIS/Device/ST/STM32L0xx/Source/Templates/gcc/startup_stm32l053xx.o
  .debug_abbrev  0x00000012      0x21b Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.o
  .debug_abbrev  0x0000022d      0x292 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_cortex.o
@@ -5280,21 +5318,21 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
  .debug_abbrev  0x00001600      0x1ed Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_rtc_ex.o
  .debug_abbrev  0x000017ed      0x304 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim.o
  .debug_abbrev  0x00001af1      0x17e Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim_ex.o
- .debug_abbrev  0x00001c6f      0x195 Src/button.o
- .debug_abbrev  0x00001e04       0xd0 Src/eeprom.o
- .debug_abbrev  0x00001ed4      0x13e Src/gpio.o
- .debug_abbrev  0x00002012      0x264 Src/kt.o
- .debug_abbrev  0x00002276      0x171 Src/lcd.o
- .debug_abbrev  0x000023e7      0x1c2 Src/main.o
- .debug_abbrev  0x000025a9      0x159 Src/rtc.o
- .debug_abbrev  0x00002702      0x187 Src/screen.o
- .debug_abbrev  0x00002889       0xe9 Src/stm32l0xx_hal_msp.o
- .debug_abbrev  0x00002972      0x15d Src/stm32l0xx_it.o
- .debug_abbrev  0x00002acf      0x130 Src/system_clock_conf.o
- .debug_abbrev  0x00002bff       0xf3 Src/system_stm32l0xx.o
- .debug_abbrev  0x00002cf2      0x207 Src/tim.o
+ .debug_abbrev  0x00001c6f      0x188 Src/button.o
+ .debug_abbrev  0x00001df7      0x1b9 Src/eeprom.o
+ .debug_abbrev  0x00001fb0      0x13e Src/gpio.o
+ .debug_abbrev  0x000020ee      0x264 Src/kt.o
+ .debug_abbrev  0x00002352      0x171 Src/lcd.o
+ .debug_abbrev  0x000024c3      0x1c2 Src/main.o
+ .debug_abbrev  0x00002685      0x159 Src/rtc.o
+ .debug_abbrev  0x000027de      0x187 Src/screen.o
+ .debug_abbrev  0x00002965       0xe9 Src/stm32l0xx_hal_msp.o
+ .debug_abbrev  0x00002a4e      0x15d Src/stm32l0xx_it.o
+ .debug_abbrev  0x00002bab      0x130 Src/system_clock_conf.o
+ .debug_abbrev  0x00002cdb       0xf3 Src/system_stm32l0xx.o
+ .debug_abbrev  0x00002dce      0x207 Src/tim.o
 
-.debug_aranges  0x00000000      0xbf0
+.debug_aranges  0x00000000      0xc48
  .debug_aranges
                 0x00000000       0x28 Drivers/CMSIS/Device/ST/STM32L0xx/Source/Templates/gcc/startup_stm32l053xx.o
  .debug_aranges
@@ -5328,31 +5366,31 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
  .debug_aranges
                 0x00000928       0x30 Src/button.o
  .debug_aranges
-                0x00000958       0x28 Src/eeprom.o
+                0x00000958       0x70 Src/eeprom.o
  .debug_aranges
-                0x00000980       0x20 Src/gpio.o
+                0x000009c8       0x20 Src/gpio.o
  .debug_aranges
-                0x000009a0       0x98 Src/kt.o
+                0x000009e8       0xa8 Src/kt.o
  .debug_aranges
-                0x00000a38       0x30 Src/lcd.o
+                0x00000a90       0x30 Src/lcd.o
  .debug_aranges
-                0x00000a68       0x38 Src/main.o
+                0x00000ac0       0x38 Src/main.o
  .debug_aranges
-                0x00000aa0       0x30 Src/rtc.o
+                0x00000af8       0x30 Src/rtc.o
  .debug_aranges
-                0x00000ad0       0x40 Src/screen.o
+                0x00000b28       0x40 Src/screen.o
  .debug_aranges
-                0x00000b10       0x20 Src/stm32l0xx_hal_msp.o
+                0x00000b68       0x20 Src/stm32l0xx_hal_msp.o
  .debug_aranges
-                0x00000b30       0x40 Src/stm32l0xx_it.o
+                0x00000b88       0x40 Src/stm32l0xx_it.o
  .debug_aranges
-                0x00000b70       0x20 Src/system_clock_conf.o
+                0x00000bc8       0x20 Src/system_clock_conf.o
  .debug_aranges
-                0x00000b90       0x28 Src/system_stm32l0xx.o
+                0x00000be8       0x28 Src/system_stm32l0xx.o
  .debug_aranges
-                0x00000bb8       0x38 Src/tim.o
+                0x00000c10       0x38 Src/tim.o
 
-.debug_ranges   0x00000000      0xf50
+.debug_ranges   0x00000000      0xfc0
  .debug_ranges  0x00000000       0x20 Drivers/CMSIS/Device/ST/STM32L0xx/Source/Templates/gcc/startup_stm32l053xx.o
  .debug_ranges  0x00000020       0xc8 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.o
  .debug_ranges  0x000000e8       0xf0 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_cortex.o
@@ -5369,20 +5407,20 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
  .debug_ranges  0x00000760      0x540 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim.o
  .debug_ranges  0x00000ca0       0x18 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim_ex.o
  .debug_ranges  0x00000cb8       0x20 Src/button.o
- .debug_ranges  0x00000cd8       0x18 Src/eeprom.o
- .debug_ranges  0x00000cf0       0xb0 Src/gpio.o
- .debug_ranges  0x00000da0       0x88 Src/kt.o
- .debug_ranges  0x00000e28       0x20 Src/lcd.o
- .debug_ranges  0x00000e48       0x28 Src/main.o
- .debug_ranges  0x00000e70       0x20 Src/rtc.o
- .debug_ranges  0x00000e90       0x30 Src/screen.o
- .debug_ranges  0x00000ec0       0x10 Src/stm32l0xx_hal_msp.o
- .debug_ranges  0x00000ed0       0x30 Src/stm32l0xx_it.o
- .debug_ranges  0x00000f00       0x10 Src/system_clock_conf.o
- .debug_ranges  0x00000f10       0x18 Src/system_stm32l0xx.o
- .debug_ranges  0x00000f28       0x28 Src/tim.o
+ .debug_ranges  0x00000cd8       0x78 Src/eeprom.o
+ .debug_ranges  0x00000d50       0xb0 Src/gpio.o
+ .debug_ranges  0x00000e00       0x98 Src/kt.o
+ .debug_ranges  0x00000e98       0x20 Src/lcd.o
+ .debug_ranges  0x00000eb8       0x28 Src/main.o
+ .debug_ranges  0x00000ee0       0x20 Src/rtc.o
+ .debug_ranges  0x00000f00       0x30 Src/screen.o
+ .debug_ranges  0x00000f30       0x10 Src/stm32l0xx_hal_msp.o
+ .debug_ranges  0x00000f40       0x30 Src/stm32l0xx_it.o
+ .debug_ranges  0x00000f70       0x10 Src/system_clock_conf.o
+ .debug_ranges  0x00000f80       0x18 Src/system_stm32l0xx.o
+ .debug_ranges  0x00000f98       0x28 Src/tim.o
 
-.debug_loc      0x00000000     0x768f
+.debug_loc      0x00000000     0x79c0
  .debug_loc     0x00000000       0xac Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.o
  .debug_loc     0x000000ac      0x3da Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_cortex.o
  .debug_loc     0x00000486      0x220 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_flash.o
@@ -5398,16 +5436,16 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
  .debug_loc     0x000038c2     0x3715 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim.o
  .debug_loc     0x00006fd7       0x7e Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim_ex.o
  .debug_loc     0x00007055       0x21 Src/button.o
- .debug_loc     0x00007076       0xf9 Src/eeprom.o
- .debug_loc     0x0000716f      0x1bf Src/kt.o
- .debug_loc     0x0000732e       0x42 Src/lcd.o
- .debug_loc     0x00007370       0x42 Src/main.o
- .debug_loc     0x000073b2       0x42 Src/rtc.o
- .debug_loc     0x000073f4      0x136 Src/screen.o
- .debug_loc     0x0000752a      0x123 Src/system_stm32l0xx.o
- .debug_loc     0x0000764d       0x42 Src/tim.o
+ .debug_loc     0x00007076      0x409 Src/eeprom.o
+ .debug_loc     0x0000747f      0x1e0 Src/kt.o
+ .debug_loc     0x0000765f       0x42 Src/lcd.o
+ .debug_loc     0x000076a1       0x42 Src/main.o
+ .debug_loc     0x000076e3       0x42 Src/rtc.o
+ .debug_loc     0x00007725      0x136 Src/screen.o
+ .debug_loc     0x0000785b      0x123 Src/system_stm32l0xx.o
+ .debug_loc     0x0000797e       0x42 Src/tim.o
 
-.debug_macro    0x00000000    0x178d7
+.debug_macro    0x00000000    0x178ea
  .debug_macro   0x00000000      0x335 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.o
  .debug_macro   0x00000335      0x838 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.o
  .debug_macro   0x00000b6d       0x28 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.o
@@ -5483,22 +5521,23 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
  .debug_macro   0x00014657      0x311 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_rtc_ex.o
  .debug_macro   0x00014968      0x312 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim.o
  .debug_macro   0x00014c7a      0x311 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim_ex.o
- .debug_macro   0x00014f8b      0x333 Src/button.o
- .debug_macro   0x000152be      0x31b Src/eeprom.o
- .debug_macro   0x000155d9      0x31b Src/gpio.o
- .debug_macro   0x000158f4      0x346 Src/kt.o
- .debug_macro   0x00015c3a       0x34 Src/kt.o
- .debug_macro   0x00015c6e      0x325 Src/lcd.o
- .debug_macro   0x00015f93      0x37c Src/main.o
- .debug_macro   0x0001630f      0x31b Src/rtc.o
- .debug_macro   0x0001662a      0x334 Src/screen.o
- .debug_macro   0x0001695e      0x311 Src/stm32l0xx_hal_msp.o
- .debug_macro   0x00016c6f      0x31b Src/stm32l0xx_it.o
- .debug_macro   0x00016f8a      0x31b Src/system_clock_conf.o
- .debug_macro   0x000172a5      0x317 Src/system_stm32l0xx.o
- .debug_macro   0x000175bc      0x31b Src/tim.o
+ .debug_macro   0x00014f8b      0x332 Src/button.o
+ .debug_macro   0x000152bd       0x10 Src/button.o
+ .debug_macro   0x000152cd      0x321 Src/eeprom.o
+ .debug_macro   0x000155ee      0x31b Src/gpio.o
+ .debug_macro   0x00015909      0x345 Src/kt.o
+ .debug_macro   0x00015c4e       0x34 Src/kt.o
+ .debug_macro   0x00015c82      0x325 Src/lcd.o
+ .debug_macro   0x00015fa7      0x37b Src/main.o
+ .debug_macro   0x00016322      0x31b Src/rtc.o
+ .debug_macro   0x0001663d      0x334 Src/screen.o
+ .debug_macro   0x00016971      0x311 Src/stm32l0xx_hal_msp.o
+ .debug_macro   0x00016c82      0x31b Src/stm32l0xx_it.o
+ .debug_macro   0x00016f9d      0x31b Src/system_clock_conf.o
+ .debug_macro   0x000172b8      0x317 Src/system_stm32l0xx.o
+ .debug_macro   0x000175cf      0x31b Src/tim.o
 
-.debug_str      0x00000000    0x7c6f2
+.debug_str      0x00000000    0x7c7f6
  .debug_str     0x00000000    0x78e8b Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.o
                               0x79293 (size before relaxing)
  .debug_str     0x00078e8b      0x2ab Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_cortex.o
@@ -5527,31 +5566,31 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
                               0x799ac (size before relaxing)
  .debug_str     0x0007bdbc       0xc1 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim_ex.o
                               0x78fef (size before relaxing)
- .debug_str     0x0007be7d      0x269 Src/button.o
-                              0x78e42 (size before relaxing)
- .debug_str     0x0007c0e6       0x1d Src/eeprom.o
-                              0x78c4a (size before relaxing)
- .debug_str     0x0007c103       0x25 Src/gpio.o
+ .debug_str     0x0007be7d      0x275 Src/button.o
+                              0x78e4e (size before relaxing)
+ .debug_str     0x0007c0f2      0x115 Src/eeprom.o
+                              0x78d38 (size before relaxing)
+ .debug_str     0x0007c207       0x25 Src/gpio.o
                               0x78e96 (size before relaxing)
- .debug_str     0x0007c128      0x30a Src/kt.o
-                              0x797a7 (size before relaxing)
- .debug_str     0x0007c432       0x4c Src/lcd.o
+ .debug_str     0x0007c22c      0x30a Src/kt.o
+                              0x79828 (size before relaxing)
+ .debug_str     0x0007c536       0x4c Src/lcd.o
                               0x78ec6 (size before relaxing)
- .debug_str     0x0007c47e       0x9a Src/main.o
-                              0x79497 (size before relaxing)
- .debug_str     0x0007c518       0x17 Src/rtc.o
+ .debug_str     0x0007c582       0x9a Src/main.o
+                              0x794a6 (size before relaxing)
+ .debug_str     0x0007c61c       0x17 Src/rtc.o
                               0x790ed (size before relaxing)
- .debug_str     0x0007c52f       0x70 Src/screen.o
+ .debug_str     0x0007c633       0x70 Src/screen.o
                               0x79024 (size before relaxing)
- .debug_str     0x0007c59f       0x27 Src/stm32l0xx_hal_msp.o
+ .debug_str     0x0007c6a3       0x27 Src/stm32l0xx_hal_msp.o
                               0x78dc1 (size before relaxing)
- .debug_str     0x0007c5c6       0x7c Src/stm32l0xx_it.o
+ .debug_str     0x0007c6ca       0x7c Src/stm32l0xx_it.o
                               0x78df4 (size before relaxing)
- .debug_str     0x0007c642       0x1b Src/system_clock_conf.o
+ .debug_str     0x0007c746       0x1b Src/system_clock_conf.o
                               0x7904a (size before relaxing)
- .debug_str     0x0007c65d       0x51 Src/system_stm32l0xx.o
+ .debug_str     0x0007c761       0x51 Src/system_stm32l0xx.o
                               0x78cd9 (size before relaxing)
- .debug_str     0x0007c6ae       0x44 Src/tim.o
+ .debug_str     0x0007c7b2       0x44 Src/tim.o
                               0x7923b (size before relaxing)
 
 .comment        0x00000000       0x6e
@@ -5584,7 +5623,7 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
  .comment       0x0000006e       0x6f Src/system_stm32l0xx.o
  .comment       0x0000006e       0x6f Src/tim.o
 
-.debug_frame    0x00000000     0x1fe4
+.debug_frame    0x00000000     0x20cc
  .debug_frame   0x00000000      0x1c4 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.o
  .debug_frame   0x000001c4       0xf4 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_cortex.o
  .debug_frame   0x000002b8      0x134 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_flash.o
@@ -5600,17 +5639,17 @@ OUTPUT(kitchen_timer_stm32.elf elf32-littlearm)
  .debug_frame   0x00001114      0x8c8 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim.o
  .debug_frame   0x000019dc       0x44 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim_ex.o
  .debug_frame   0x00001a20       0x54 Src/button.o
- .debug_frame   0x00001a74       0x3c Src/eeprom.o
- .debug_frame   0x00001ab0       0x30 Src/gpio.o
- .debug_frame   0x00001ae0      0x174 Src/kt.o
- .debug_frame   0x00001c54       0x60 Src/lcd.o
- .debug_frame   0x00001cb4       0x74 Src/main.o
- .debug_frame   0x00001d28       0x5c Src/rtc.o
- .debug_frame   0x00001d84       0x80 Src/screen.o
- .debug_frame   0x00001e04       0x28 Src/stm32l0xx_hal_msp.o
- .debug_frame   0x00001e2c       0x98 Src/stm32l0xx_it.o
- .debug_frame   0x00001ec4       0x28 Src/system_clock_conf.o
- .debug_frame   0x00001eec       0x3c Src/system_stm32l0xx.o
- .debug_frame   0x00001f28       0x70 Src/tim.o
- .debug_frame   0x00001f98       0x20 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/libgcc.a(_udivsi3.o)
- .debug_frame   0x00001fb8       0x2c /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv6-m/libc_nano.a(lib_a-init.o)
+ .debug_frame   0x00001a74       0xec Src/eeprom.o
+ .debug_frame   0x00001b60       0x30 Src/gpio.o
+ .debug_frame   0x00001b90      0x1ac Src/kt.o
+ .debug_frame   0x00001d3c       0x60 Src/lcd.o
+ .debug_frame   0x00001d9c       0x74 Src/main.o
+ .debug_frame   0x00001e10       0x5c Src/rtc.o
+ .debug_frame   0x00001e6c       0x80 Src/screen.o
+ .debug_frame   0x00001eec       0x28 Src/stm32l0xx_hal_msp.o
+ .debug_frame   0x00001f14       0x98 Src/stm32l0xx_it.o
+ .debug_frame   0x00001fac       0x28 Src/system_clock_conf.o
+ .debug_frame   0x00001fd4       0x3c Src/system_stm32l0xx.o
+ .debug_frame   0x00002010       0x70 Src/tim.o
+ .debug_frame   0x00002080       0x20 /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/armv6-m/libgcc.a(_udivsi3.o)
+ .debug_frame   0x000020a0       0x2c /home/peter/eclipse/plugins/fr.ac6.mcu.externaltools.arm-none.linux64_1.12.0.201611241417/tools/compiler/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv6-m/libc_nano.a(lib_a-init.o)

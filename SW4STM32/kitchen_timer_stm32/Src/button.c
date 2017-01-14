@@ -1,5 +1,5 @@
 /*
- * @file kt.c
+ * @file button.c
  *
  */
 
@@ -116,8 +116,8 @@ void Button_StateMachineRun(void) {
             /* Time setting mode || stopped so start pressed */
             kt.state = KT_STATE_COUNTDOWN;
             /* Store this value for retrieval after shutdown */
-            if (EEPROM_ByteRead(EEPROM_ADDRESS) != kt.minutes) {
-                EEPROM_ByteWrite(EEPROM_ADDRESS, kt.minutes);
+            if (KT_MinutesLoad() != kt.minutes) {
+                KT_MinutesSave(kt.minutes);
             }
         } else if (kt.state == KT_STATE_COUNTDOWN) {
             /* Counting down so stop pressed */
