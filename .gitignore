@@ -1,4 +1,5 @@
 .settings
+output.map
 
 # Object files
 *.o
