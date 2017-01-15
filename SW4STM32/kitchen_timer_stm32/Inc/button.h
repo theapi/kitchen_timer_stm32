@@ -35,9 +35,11 @@ typedef enum {
   */
 typedef struct
 {
-    uint32_t down;              /* Time how long a button is pressed */
+    uint32_t down;              /* Time since last time update */
     enum button_flags flag;     /* Register of all the button positions */
     Button_StateTypeDef state;  /* Current state of the button state machine */
+    uint32_t long_press;        /* How many milliseconds until a press is considered long */
+    uint32_t press_time;        /* When the button was pressed */
 } Button_TypeDef;
 
 

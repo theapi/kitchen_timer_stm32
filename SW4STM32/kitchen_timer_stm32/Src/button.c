@@ -13,6 +13,8 @@ void Button_Init(void) {
     button.state = BUTT_NONE;
     button.flag = 0;
     button.down = 0;
+    button.long_press = LONG_PRESS;
+    button.press_time = 0;
 }
 
 /**
@@ -58,14 +60,19 @@ void Button_StateMachineRun(void) {
             if (!(button.flag & BUTTON_M)) {
                 /* Start a timer to see if it's a long press */
                 button.down = HAL_GetTick();
+                /* Remember when the button was pressed */
+                button.press_time = button.down;
                 /* Set this button's flag */
                 button.flag |= BUTTON_M;
                 KT_IncreaseTime();
             } else {
                 /* Check for long press, sleep is disabled during the button press. */
-                if ((HAL_GetTick() - button.down) > LONG_PRESS) {
+                if ((HAL_GetTick() - button.down) > button.long_press) {
                     KT_IncreaseTime();
                     button.down = HAL_GetTick();
+                    if (button.down - button.press_time > LONG_PRESS_FASTER_AFTER) {
+                        button.long_press = LONG_PRESS_FASTER;
+                    }
                 }
             }
         }
@@ -75,6 +82,7 @@ void Button_StateMachineRun(void) {
         button.flag &= ~(BUTTON_M);
         /* Reset the button timer */
         button.down = 0x00U;
+        button.long_press = LONG_PRESS;
         button.state = BUTT_NONE;
         break;
     case BUTT_S_DOWN:
@@ -87,14 +95,19 @@ void Button_StateMachineRun(void) {
             if (!(button.flag & BUTTON_S)) {
                 /* Start a timer to see if it's a long press */
                 button.down = HAL_GetTick();
+                /* Remember when the button was pressed */
+                button.press_time = button.down;
                 /* Set this button's flag */
                 button.flag |= BUTTON_S;
                 KT_DecreaseTime();
             } else {
                 /* Check for long press, sleep is disabled during the button press. */
-                if ((HAL_GetTick() - button.down) > LONG_PRESS) {
+                if ((HAL_GetTick() - button.down) > button.long_press) {
                     KT_DecreaseTime();
                     button.down = HAL_GetTick();
+                    if (button.down - button.press_time > LONG_PRESS_FASTER_AFTER) {
+                        button.long_press = LONG_PRESS_FASTER;
+                    }
                 }
             }
         }
@@ -104,6 +117,7 @@ void Button_StateMachineRun(void) {
         button.flag &= ~(BUTTON_S);
         /* Reset the button timer */
         button.down = 0x00U;
+        button.long_press = LONG_PRESS;
         button.state = BUTT_NONE;
         break;
     case BUTT_MS:
