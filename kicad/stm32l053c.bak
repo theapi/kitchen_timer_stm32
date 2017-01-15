@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:ttl_ieee
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -30,6 +31,7 @@ LIBS:contrib
 LIBS:valves
 LIBS:stm32
 LIBS:lcd_kitchen_timer
+LIBS:switches
 LIBS:stm32l053c-cache
 EELAYER 25 0
 EELAYER END
@@ -309,42 +311,40 @@ $EndComp
 $Comp
 L C C7
 U 1 1 5806648B
-P 3750 5400
-F 0 "C7" H 3775 5500 50  0000 L CNN
-F 1 "4.3pF" H 3775 5300 50  0000 L CNN
-F 2 "Capacitors_SMD:C_0805_HandSoldering" H 3788 5250 50  0001 C CNN
-F 3 "" H 3750 5400 50  0000 C CNN
-	1    3750 5400
+P 3750 5650
+F 0 "C7" H 3775 5750 50  0000 L CNN
+F 1 "4.3pF" H 3775 5550 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0603_HandSoldering" H 3788 5500 50  0001 C CNN
+F 3 "" H 3750 5650 50  0000 C CNN
+	1    3750 5650
 	1    0    0    -1  
 $EndComp
 $Comp
 L C C6
 U 1 1 580665CF
-P 3450 5400
-F 0 "C6" H 3475 5500 50  0000 L CNN
-F 1 "4.3pF" H 3475 5300 50  0000 L CNN
-F 2 "Capacitors_SMD:C_0805_HandSoldering" H 3488 5250 50  0001 C CNN
-F 3 "" H 3450 5400 50  0000 C CNN
-	1    3450 5400
+P 3450 5650
+F 0 "C6" H 3475 5750 50  0000 L CNN
+F 1 "4.3pF" H 3475 5550 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0603_HandSoldering" H 3488 5500 50  0001 C CNN
+F 3 "" H 3450 5650 50  0000 C CNN
+	1    3450 5650
 	1    0    0    -1  
 $EndComp
 $Comp
 L Earth #PWR013
 U 1 1 5806680D
-P 3600 5700
-F 0 "#PWR013" H 3600 5450 50  0001 C CNN
-F 1 "Earth" H 3600 5550 50  0001 C CNN
-F 2 "" H 3600 5700 50  0000 C CNN
-F 3 "" H 3600 5700 50  0000 C CNN
-	1    3600 5700
+P 3600 5950
+F 0 "#PWR013" H 3600 5700 50  0001 C CNN
+F 1 "Earth" H 3600 5800 50  0001 C CNN
+F 2 "" H 3600 5950 50  0000 C CNN
+F 3 "" H 3600 5950 50  0000 C CNN
+	1    3600 5950
 	1    0    0    -1  
 $EndComp
 Text Label 7100 2600 2    60   ~ 0
 LCD_SEG7
 NoConn ~ 4600 5000
 NoConn ~ 4600 5100
-Text GLabel 3950 2800 0    60   Input ~ 0
-PA5
 NoConn ~ 6550 2500
 NoConn ~ 6550 3000
 NoConn ~ 6550 3100
@@ -355,17 +355,6 @@ NoConn ~ 4600 2700
 NoConn ~ 4600 3400
 NoConn ~ 4600 3500
 NoConn ~ 4600 3800
-$Comp
-L Crystal Y1
-U 1 1 584DF533
-P 3600 5050
-F 0 "Y1" H 3600 5200 50  0000 C CNN
-F 1 "Crystal" H 3600 4900 50  0000 C CNN
-F 2 "Crystals:ABM3" H 3600 5050 50  0001 C CNN
-F 3 "" H 3600 5050 50  0000 C CNN
-	1    3600 5050
-	-1   0    0    1   
-$EndComp
 Text Label 3900 4800 0    60   ~ 0
 OSC32_IN
 Text Label 3900 4900 0    60   ~ 0
@@ -805,8 +794,6 @@ Wire Wire Line
 Wire Wire Line
 	4050 2900 4600 2900
 Wire Wire Line
-	3950 2800 4600 2800
-Wire Wire Line
 	4050 2600 4600 2600
 Wire Wire Line
 	4050 2500 4600 2500
@@ -842,20 +829,14 @@ Wire Wire Line
 Wire Wire Line
 	3450 4800 4600 4800
 Wire Wire Line
-	3450 4800 3450 5250
-Connection ~ 3450 5050
-Wire Wire Line
 	3750 4900 4600 4900
 Wire Wire Line
-	3750 4900 3750 5250
-Connection ~ 3750 5050
+	3750 5950 3750 5800
 Wire Wire Line
-	3750 5700 3750 5550
+	3450 5950 3750 5950
 Wire Wire Line
-	3450 5700 3750 5700
-Wire Wire Line
-	3450 5550 3450 5700
-Connection ~ 3600 5700
+	3450 5800 3450 5950
+Connection ~ 3600 5950
 Wire Wire Line
 	850  6750 1700 6750
 Connection ~ 1250 6750
@@ -997,7 +978,7 @@ U 1 1 586A536C
 P 7400 3700
 F 0 "U3" H 7400 3700 60  0000 C CNN
 F 1 "um66t" H 7400 3300 60  0000 C CNN
-F 2 "TO_SOT_Packages_THT:TO-92_Inline_Narrow_Oval" H 7400 3700 60  0001 C CNN
+F 2 "theapi:UM66T_MELODY" H 7400 3700 60  0001 C CNN
 F 3 "" H 7400 3700 60  0001 C CNN
 	1    7400 3700
 	1    0    0    -1  
@@ -1083,12 +1064,12 @@ $EndComp
 $Comp
 L R R9
 U 1 1 58754819
-P 8000 2600
-F 0 "R9" V 8080 2600 50  0000 C CNN
-F 1 "220" V 8000 2600 50  0000 C CNN
-F 2 "Resistors_SMD:R_0805_HandSoldering" V 7930 2600 50  0001 C CNN
-F 3 "" H 8000 2600 50  0000 C CNN
-	1    8000 2600
+P 7900 3250
+F 0 "R9" V 7980 3250 50  0000 C CNN
+F 1 "220" V 7900 3250 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" V 7830 3250 50  0001 C CNN
+F 3 "" H 7900 3250 50  0000 C CNN
+	1    7900 3250
 	-1   0    0    1   
 $EndComp
 Wire Wire Line
@@ -1101,17 +1082,67 @@ Wire Wire Line
 	8700 2050 8700 2250
 Text Label 8900 1450 2    60   ~ 0
 PNP_BASE
-Wire Wire Line
-	7550 3400 7800 3400
-Wire Wire Line
-	7800 3400 7800 4000
-Wire Wire Line
-	7800 4000 7700 4000
-Connection ~ 7800 3650
 Text Notes 8900 2900 0    60   ~ 0
 The NPN is needed to \ncompletely disconnect the buzzer, \notherwise it continually uses power
+$Comp
+L SW_SPDT SW4
+U 1 1 587BED40
+P 8000 2800
+F 0 "SW4" H 8000 2970 50  0000 C CNN
+F 1 "SW_SPDT" H 8000 2600 50  0000 C CNN
+F 2 "Buttons_Switches_SMD:SW_SPST_B3U-1100P" H 8000 2800 50  0001 C CNN
+F 3 "" H 8000 2800 50  0000 C CNN
+	1    8000 2800
+	0    1    1    0   
+$EndComp
+$Comp
+L R R10
+U 1 1 587BF3F3
+P 8100 3250
+F 0 "R10" V 8180 3250 50  0000 C CNN
+F 1 "2K2" V 8100 3250 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" V 8030 3250 50  0001 C CNN
+F 3 "" H 8100 3250 50  0000 C CNN
+	1    8100 3250
+	-1   0    0    1   
+$EndComp
 Wire Wire Line
-	7800 3650 8000 3650
+	7550 3650 8100 3650
 Wire Wire Line
-	8000 3650 8000 2750
+	7900 3400 7900 4000
+Wire Wire Line
+	8100 3650 8100 3400
+Connection ~ 7900 3650
+Wire Wire Line
+	7900 3100 7900 3000
+Wire Wire Line
+	8100 3100 8100 3000
+Wire Wire Line
+	8000 2600 8000 2450
+Text Notes 8150 3100 0    60   ~ 0
+Volume switch
+Wire Wire Line
+	7550 3400 7550 3650
+Wire Wire Line
+	7900 4000 7700 4000
+NoConn ~ 4600 2800
+$Comp
+L Crystal_GND23 Y1
+U 1 1 587C1270
+P 3600 5150
+F 0 "Y1" H 3850 5150 50  0000 L CNN
+F 1 "Crystal_GND23" H 2850 5150 50  0000 L CNN
+F 2 "Crystals:Crystal_SMD_SeikoEpson_MC306-4pin_8.0x3.2mm_HandSoldering" H 3600 5150 50  0001 C CNN
+F 3 "" H 3600 5150 50  0000 C CNN
+	1    3600 5150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3450 4800 3450 5500
+Connection ~ 3450 5150
+Wire Wire Line
+	3750 4900 3750 5500
+Connection ~ 3750 5150
+NoConn ~ 3600 4950
+NoConn ~ 3600 5350
 $EndSCHEMATC
