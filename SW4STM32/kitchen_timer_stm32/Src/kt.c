@@ -24,14 +24,14 @@ void KT_Init() {
  * Load the save minutes setting.
  */
 uint8_t KT_MinutesLoad(void) {
-    return EEPROM_DataLoad(0);
+    return (uint8_t)EEPROM_DataLoad(0);
 }
 
 /**
  * Save the minutes setting
  */
 HAL_StatusTypeDef KT_MinutesSave(uint8_t minutes) {
-    return EEPROM_DataSave(0, minutes);
+    return EEPROM_DataSave(0, (uint32_t)minutes);
 }
 /**
  *  Increase the countdown time.

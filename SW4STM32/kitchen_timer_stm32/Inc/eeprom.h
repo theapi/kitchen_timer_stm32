@@ -39,30 +39,28 @@ extern EEPROM_TypeDef eeprom;
  */
 void EEPROM_init(void);
 
-uint32_t EEPROM_GetCounterFromWord(uint32_t word);
-uint8_t EEPROM_GetDataFromWord(uint32_t word);
 
 /**
- * @brief Saves a byte with flash wear protection.
+ * @brief Saves a uint32_t with flash wear protection.
  * @note The date is saved with a counter to a different location each time.
  * The location is determined by the saved counter.
  */
-HAL_StatusTypeDef EEPROM_DataSave(uint8_t id, uint8_t data);
+HAL_StatusTypeDef EEPROM_DataSave(uint8_t id, uint32_t data);
 
 /**
- * The current read address for the given id.
+ * The current counter address for the given id.
  */
-uint32_t EEPROM_GetDataReadAddress(uint8_t id);
+uint32_t EEPROM_GetCounterAddress(uint8_t id);
 
 /**
- * The next write address for the given id.
+ * The current data address for the given id.
  */
-uint32_t EEPROM_GetDataWriteAddress(uint8_t id);
+uint32_t EEPROM_GetDataAddress(uint8_t id);
 
 /**
  * Loads the specified data.
  */
-uint8_t EEPROM_DataLoad(uint8_t id);
+uint32_t EEPROM_DataLoad(uint8_t id);
 
 HAL_StatusTypeDef EEPROM_ByteWrite(uint32_t address, uint8_t data);
 uint8_t EEPROM_ByteRead(uint32_t address);
