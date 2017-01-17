@@ -32,6 +32,7 @@ void Button_IRQHandler(uint16_t GPIO_Pin){
         } else if (GPIO_Pin == GPIO_PIN_4) {
             button.state = BUTT_STSP_DOWN;
         }
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
     }
     else {
         /* Falling edge, button released */
@@ -42,6 +43,7 @@ void Button_IRQHandler(uint16_t GPIO_Pin){
         } else if (GPIO_Pin == GPIO_PIN_4) {
             button.state = BUTT_STSP_UP;
         }
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
     }
 }
 

@@ -17,6 +17,7 @@ void KT_Init() {
     kt.update = 1;
     kt.idle_time = 0;
     kt.state = KT_STATE_INIT;
+    Button_Init();
     EEPROM_init();
 }
 
