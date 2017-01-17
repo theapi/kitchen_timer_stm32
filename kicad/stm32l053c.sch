@@ -520,7 +520,7 @@ F 3 "" H 1300 2700 50  0000 C CNN
 	1    1300 2700
 	1    0    0    -1  
 $EndComp
-Text Label 3000 2850 2    60   ~ 0
+Text Label 3000 4050 2    60   ~ 0
 BUTTON0
 $Comp
 L SW_PUSH SW2
@@ -568,7 +568,7 @@ F 3 "" H 1300 3900 50  0000 C CNN
 	1    1300 3900
 	1    0    0    -1  
 $EndComp
-Text Label 3000 4050 2    60   ~ 0
+Text Label 3000 2850 2    60   ~ 0
 BUTTON2
 $Comp
 L R R3
@@ -1114,7 +1114,6 @@ Wire Wire Line
 	7550 3400 7550 3650
 Wire Wire Line
 	7900 4000 7700 4000
-NoConn ~ 4600 2800
 $Comp
 L Crystal_GND23 Y1
 U 1 1 587C1270
@@ -1134,4 +1133,17 @@ Wire Wire Line
 Connection ~ 3750 5150
 NoConn ~ 3600 4950
 NoConn ~ 3600 5350
+$Comp
+L TEST_1P W1
+U 1 1 587DC0B5
+P 3700 2800
+F 0 "W1" H 3700 3070 50  0000 C CNN
+F 1 "TEST_1P" H 3700 3000 50  0000 C CNN
+F 2 "Measurement_Points:Measurement_Point_Round-TH_Small" H 3900 2800 50  0001 C CNN
+F 3 "" H 3900 2800 50  0000 C CNN
+	1    3700 2800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3700 2800 4600 2800
 $EndSCHEMATC

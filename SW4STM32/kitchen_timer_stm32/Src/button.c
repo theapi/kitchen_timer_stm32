@@ -25,21 +25,21 @@ void Button_IRQHandler(uint16_t GPIO_Pin){
     kt.idle_time = 0;
     if (HAL_GPIO_ReadPin(GPIOB, GPIO_Pin) == 0x01) {
         /* Rising edge, button pushed */
-        if (GPIO_Pin == GPIO_PIN_4) {
+        if (GPIO_Pin == GPIO_PIN_6) {
             button.state = BUTT_M_DOWN;
         } else if (GPIO_Pin == GPIO_PIN_5) {
             button.state = BUTT_S_DOWN;
-        } else if (GPIO_Pin == GPIO_PIN_6) {
+        } else if (GPIO_Pin == GPIO_PIN_4) {
             button.state = BUTT_STSP_DOWN;
         }
     }
     else {
         /* Falling edge, button released */
-        if (GPIO_Pin == GPIO_PIN_4) {
+        if (GPIO_Pin == GPIO_PIN_6) {
             button.state = BUTT_M_UP;
         } else if (GPIO_Pin == GPIO_PIN_5) {
             button.state = BUTT_S_UP;
-        } else if (GPIO_Pin == GPIO_PIN_6) {
+        } else if (GPIO_Pin == GPIO_PIN_4) {
             button.state = BUTT_STSP_UP;
         }
     }
