@@ -176,7 +176,7 @@ KT_StateTypeDef KT_StateAlarmStart(KT_StateTypeDef state) {
 KT_StateTypeDef KT_StateAlarmOnHigh(KT_StateTypeDef state) {
     if (alarm_pulse_timer == 0) {
         alarm_pulse_timer = HAL_GetTick();
-        /* PB11 buzzing */
+        /* PA15 buzzing */
         HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
     }
     else if ((HAL_GetTick() - alarm_pulse_timer ) > ALARM_PULSE) {

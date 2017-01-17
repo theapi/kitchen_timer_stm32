@@ -354,7 +354,6 @@ NoConn ~ 6550 3700
 NoConn ~ 4600 2700
 NoConn ~ 4600 3400
 NoConn ~ 4600 3500
-NoConn ~ 4600 3800
 Text Label 3900 4800 0    60   ~ 0
 OSC32_IN
 Text Label 3900 4900 0    60   ~ 0
@@ -702,7 +701,7 @@ F 3 "" H 9200 2000 50  0000 C CNN
 	1    9200 2000
 	1    0    0    -1  
 $EndComp
-Text Label 7100 3400 2    60   ~ 0
+Text Label 4150 3800 0    60   ~ 0
 BUZZER
 $Comp
 L R R7
@@ -910,17 +909,15 @@ Wire Wire Line
 	3400 6550 3700 6550
 Wire Wire Line
 	3700 6550 3700 6400
-Wire Wire Line
-	6550 3400 7250 3400
 $Comp
 L R R1
 U 1 1 58691698
-P 7400 3400
-F 0 "R1" V 7480 3400 50  0000 C CNN
-F 1 "0" V 7400 3400 50  0000 C CNN
-F 2 "Resistors_SMD:R_0805_HandSoldering" V 7330 3400 50  0001 C CNN
-F 3 "" H 7400 3400 50  0000 C CNN
-	1    7400 3400
+P 7400 4500
+F 0 "R1" V 7480 4500 50  0000 C CNN
+F 1 "0" V 7400 4500 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" V 7330 4500 50  0001 C CNN
+F 3 "" H 7400 4500 50  0000 C CNN
+	1    7400 4500
 	0    1    1    0   
 $EndComp
 $Comp
@@ -994,7 +991,7 @@ F 3 "" H 7100 3900 50  0000 C CNN
 	1    7100 3900
 	1    0    0    -1  
 $EndComp
-Text Notes 6750 4350 0    60   ~ 0
+Text Notes 6600 4300 0    60   ~ 0
 Either BUZZER or MELODY
 Wire Wire Line
 	9200 1650 9200 1900
@@ -1096,12 +1093,9 @@ F 3 "" H 8100 3250 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 Wire Wire Line
-	7550 3650 8100 3650
+	7900 3400 7900 4500
 Wire Wire Line
-	7900 3400 7900 4000
-Wire Wire Line
-	8100 3650 8100 3400
-Connection ~ 7900 3650
+	8100 4000 8100 3400
 Wire Wire Line
 	7900 3100 7900 3000
 Wire Wire Line
@@ -1111,9 +1105,7 @@ Wire Wire Line
 Text Notes 8150 3100 0    60   ~ 0
 Volume switch
 Wire Wire Line
-	7550 3400 7550 3650
-Wire Wire Line
-	7900 4000 7700 4000
+	7700 4000 8100 4000
 $Comp
 L Crystal_GND23 Y1
 U 1 1 587C1270
@@ -1146,4 +1138,14 @@ F 3 "" H 3900 2800 50  0000 C CNN
 $EndComp
 Wire Wire Line
 	3700 2800 4600 2800
+Wire Wire Line
+	4600 3800 4150 3800
+Wire Wire Line
+	7900 4500 7550 4500
+Wire Wire Line
+	6900 4500 7250 4500
+Text Label 6900 4500 0    60   ~ 0
+BUZZER
+Connection ~ 7900 4000
+NoConn ~ 6550 3800
 $EndSCHEMATC
