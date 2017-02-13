@@ -181,7 +181,7 @@ void Screen_Update(LCD_HandleTypeDef *hlcd, uint8_t minutes, uint8_t seconds, ui
             | lcd_digits[3][seconds_singles][3];
 
     if (ampm == 1) {
-        LCD->RAM[LCD_RAM_REGISTER6] |= LCD_SEG_4;
+        LCD->RAM[LCD_RAM_REGISTER4] |= LCD_SEG_4;
     }
 
     HAL_LCD_UpdateDisplayRequest(hlcd);
