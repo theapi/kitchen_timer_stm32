@@ -171,11 +171,12 @@ void Screen_Update(LCD_HandleTypeDef *hlcd, uint8_t minutes, uint8_t seconds, ui
             | lcd_digits[1][minutes_singles][1] | lcd_digits[2][seconds_tens][1]
             | lcd_digits[3][seconds_singles][1];
 
-    LCD->RAM[LCD_RAM_REGISTER4] = lcd_digits[0][minutes_tens][2]
+    /* Registers 4 & 6 are swapped because they're swapped on the pcb (oops) */
+    LCD->RAM[LCD_RAM_REGISTER6] = lcd_digits[0][minutes_tens][2]
             | lcd_digits[1][minutes_singles][2] | lcd_digits[2][seconds_tens][2]
             | lcd_digits[3][seconds_singles][2];
 
-    LCD->RAM[LCD_RAM_REGISTER6] = lcd_digits[0][minutes_tens][3]
+    LCD->RAM[LCD_RAM_REGISTER4] = lcd_digits[0][minutes_tens][3]
             | lcd_digits[1][minutes_singles][3] | lcd_digits[2][seconds_tens][3]
             | lcd_digits[3][seconds_singles][3];
 
