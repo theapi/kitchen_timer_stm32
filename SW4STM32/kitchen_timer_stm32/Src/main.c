@@ -46,6 +46,8 @@ int main(void) {
     HAL_PWREx_EnableUltraLowPower();
     HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN1);
 
+    /* PA15 buzzing */
+  //HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 
     while (1) {
 
@@ -57,7 +59,9 @@ int main(void) {
 
         Screen_Process(&hlcd, &kt);
 
-        if (kt.state != KT_STATE_OFF && (button.state == BUTT_NONE) && (alarm_duration_timer == 0)) {
+        if (kt.state != KT_STATE_OFF
+                && (button.state == BUTT_NONE)
+                && (alarm_duration_timer == 0)) {
             //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 
             /* Disable the systick interrupt to not wake up every millisecond */
